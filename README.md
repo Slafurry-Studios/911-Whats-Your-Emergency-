@@ -1,5 +1,5 @@
 # Sourdough-Starter
-Unity 6.3 LTS URP starter for Slafurry Studios — GameSystem base classes, Drive asset sync, and itch.io deploy included.
+Unity 2022.3 LTS URP starter for Slafurry Studios — GameSystem base classes, Drive asset sync, and itch.io deploy included.
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/9dee6058-b82a-43b4-ae26-eab6ffe699da" width="100%" alt="Sourdough-Starter banner" />
@@ -59,7 +59,7 @@ See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the full breakdown of base classe
 ## GETTING STARTED
 
 ### Prerequisites
-- Unity `6000.3.25f1` (see `ProjectSettings/ProjectVersion.txt`)
+- Unity `2022.3.2f1` (see `ProjectSettings/ProjectVersion.txt`)
 - Git (no Git LFS — binaries are stored as plain blobs)
 
 ### Setup
