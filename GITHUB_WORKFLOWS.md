@@ -7,7 +7,7 @@ CI/CD lives in [`.github/workflows/`](./.github/workflows/). Four workflows are 
 | Unity Compile | `unity-compile.yml` | **Pull requests** (paths: `Assets/`, `Packages/`, `ProjectSettings/`) | Batchmode compile gate — fails the PR on `error CS` or non-successful Unity exit |
 | Track Drive Changes | `track.yml` | Daily at 07:00 WITA (cron `0 23 * * *`) + manual | Scans Google Drive sprite/audio folders, updates `state/` manifests **on `main`** (`[skip ci]`), Discord-notifies new/changed/removed-once |
 | Retrieve New Drive Files | `retrieve.yml` | Manual only | Downloads new Drive files into `Assets/_Game/02_Art/Sprite` and `Assets/_Game/03_Audio`; commits **state → `main`** immediately; assets → disposable `chore/asset` PR → `main` |
-| Build and Deploy to itch.io | `unity-itchio-deploy.yml` | Manual only | Builds Windows/macOS/WebGL with Unity, pushes to itch.io via butler, optionally creates a GitHub Release, then posts a Discord announcement |
+| Build and Deploy to itch.io | `unity-itchio-deploy.yml` | Manual only | Builds WebGL with Unity, pushes to itch.io via butler, optionally creates a GitHub Release, then posts a Discord announcement |
 
 ## Setup (repository secrets & variables)
 
@@ -45,15 +45,14 @@ All configuration is done under **Settings → Secrets and variables → Actions
 | `ITCH_USER` | deploy | — | Your itch.io username (**required**) |
 | `ITCH_GAME` | deploy | — | Your itch.io game URL slug (**required**) |
 | `GAME_DISPLAY_NAME` | deploy | `ITCH_GAME` | Human-readable title used in Discord posts |
-| `ITCH_CHANNEL_WINDOWS` / `ITCH_CHANNEL_MAC` / `ITCH_CHANNEL_WEBGL` | deploy | `windows` / `mac` / `html5` | itch.io channel names per platform |
+| `ITCH_CHANNEL_WEBGL` | deploy | `html5` | itch.io channel name for WebGL |
 | `UNITY_PROJECT_PATH` | deploy, retrieve | `.` | Path to the Unity project if it's not the repo root |
 
 ## Running the workflows
 
 1. Go to the repo on GitHub → **Actions** tab.
 2. Select the workflow in the left sidebar.
-3. Click **Run workflow**, pick the branch (`main`) and (for deploy) choose inputs:
-   - **platforms**: `All`, `Windows`, `macOS`, or `WebGL`
+3. Click **Run workflow**, pick the branch (`main`) and choose inputs:
    - **release_type**: `release`, `beta`, or `alpha` — appended to the version tag, e.g. `v1.2.3-release`, `v1.2.3-beta`, `v1.2.3-alpha`
    - **release_tag**: optional version number, e.g. `1.2.3` — the `v` prefix and `-{release_type}` suffix are added automatically, so just type `X.X.X`. Leave empty for an unversioned build (no GitHub Release). The last published version is shown as context in the run log
 4. Click **Run workflow** and watch the run log.

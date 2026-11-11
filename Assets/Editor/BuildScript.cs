@@ -99,31 +99,8 @@ public static class BuildScript
         string productName
     )
     {
-        string safeName = SanitizeFileName(productName);
-
         switch (target)
         {
-            case BuildTarget.StandaloneWindows64:
-                return Path.Combine(
-                    "build",
-                    "StandaloneWindows64",
-                    safeName + ".exe"
-                );
-
-            case BuildTarget.StandaloneLinux64:
-                return Path.Combine(
-                    "build",
-                    "StandaloneLinux64",
-                    safeName + ".x86_64"
-                );
-
-            case BuildTarget.StandaloneOSX:
-                return Path.Combine(
-                    "build",
-                    "StandaloneOSX",
-                    safeName + ".app"
-                );
-
             case BuildTarget.WebGL:
                 return Path.Combine(
                     "build",
