@@ -40,8 +40,6 @@ jobs:
 
   build:
     name: Build WebGL
-    # Pin to ubuntu-22.04: ubuntu-latest (26.04) breaks buildalon/unity-setup@v2
-    # because Unity Hub can't install at /opt/unityhub/unityhub.
     runs-on: ubuntu-22.04
 
     steps:
@@ -64,35 +62,22 @@ jobs:
             Library-ubuntu-latest-WebGL-
             Library-ubuntu-latest-
 
-      - name: Install Unity Hub (apt)
-        shell: bash
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq gnupg curl ca-certificates
-          curl -fsSL https://hub.unity3d.com/linux/keys/public | sudo gpg --dearmor -o /usr/share/keyrings/unityhub.gpg
-          echo "deb [signed-by=/usr/share/keyrings/unityhub.gpg] https://hub-dist.unity3d.com/artifactory/hub-debian-prod-local stable main" | sudo tee /etc/apt/sources.list.d/unityhub.list
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq unityhub
-          sudo mkdir -p /opt/unityhub
-          sudo ln -sf "$(which unityhub)" /opt/unityhub/unityhub
-
       - name: Setup Unity
-        uses: buildalon/unity-setup@v2
+        uses: buildalon/unity-setup@v3
         with:
           version-file: ${{ env.UNITY_PROJECT_PATH }}/ProjectSettings/ProjectVersion.txt
           build-targets: WebGL
           cache-installation: true
-          auto-update-hub: false
 
       - name: Activate Unity license
-        uses: buildalon/activate-unity-license@v2
+        uses: buildalon/activate-unity-license@v3
         with:
           license: Personal
           username: ${{ secrets.UNITY_EMAIL }}
           password: ${{ secrets.UNITY_PASSWORD }}
 
       - name: Build Unity project
-        uses: buildalon/unity-action@v3
+        uses: buildalon/unity-action@v4
         with:
           args: >-
             -quit
@@ -149,7 +134,6 @@ jobs:
 
     needs:
       - build
-    # Pin to ubuntu-22.04: ubuntu-latest (26.04) breaks buildalon/unity-setup@v2.
     runs-on: ubuntu-22.04
 
     outputs:
@@ -224,7 +208,6 @@ jobs:
       - deploy
 
     if: inputs.release_tag != ''
-    # Pin to ubuntu-22.04: ubuntu-latest (26.04) breaks buildalon/unity-setup@v2.
     runs-on: ubuntu-22.04
 
     steps:
@@ -326,7 +309,6 @@ jobs:
       - deploy
 
     if: needs.deploy.result == 'success'
-    # Pin to ubuntu-22.04: ubuntu-latest (26.04) breaks buildalon/unity-setup@v2.
     runs-on: ubuntu-22.04
 
     steps:
@@ -442,7 +424,6 @@ jobs:
       - deploy
 
     if: failure()
-    # Pin to ubuntu-22.04: ubuntu-latest (26.04) breaks buildalon/unity-setup@v2.
     runs-on: ubuntu-22.04
 
     steps:
