@@ -64,6 +64,14 @@ jobs:
             Library-ubuntu-latest-WebGL-
             Library-ubuntu-latest-
 
+      - name: Install Unity Hub (apt)
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq unityhub
+          sudo mkdir -p /opt/unityhub
+          sudo ln -sf "$(which unityhub)" /opt/unityhub/unityhub
+
       - name: Setup Unity
         uses: buildalon/unity-setup@v2
         with:

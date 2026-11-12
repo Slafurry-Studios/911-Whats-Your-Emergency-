@@ -86,12 +86,21 @@ jobs:
             --project-name "$GITHUB_REPOSITORY (audio)" \
             --discord-webhook "$DISCORD_WEBHOOK_URL"
 
+      - name: Install Unity Hub (apt)
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq unityhub
+          sudo mkdir -p /opt/unityhub
+          sudo ln -sf "$(which unityhub)" /opt/unityhub/unityhub
+
       # Unity generates .meta files for the newly downloaded assets (stable GUIDs +
       # import settings) so they are committed together with the Drive files.
       - name: Setup Unity
         uses: buildalon/unity-setup@v2
         with:
           version-file: ${{ env.UNITY_PROJECT_PATH }}/ProjectSettings/ProjectVersion.txt
+          auto-update-hub: false
 
       - name: Activate Unity license
         uses: buildalon/activate-unity-license@v2
