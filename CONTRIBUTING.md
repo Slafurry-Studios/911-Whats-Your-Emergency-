@@ -17,7 +17,7 @@ Thanks for your interest in improving this project. This document explains how t
 
 ## Development setup
 
-- **Unity version**: see `ProjectSettings/ProjectVersion.txt` (currently Unity 2022.3 LTS, `2022.3.2f1`). Use the same major.minor version to avoid serialized asset churn.
+- **Unity version**: see `ProjectSettings/ProjectVersion.txt` (currently Unity 2022.3 LTS, `2022.3.62f3`). Use the same major.minor version to avoid serialized asset churn.
 - **No Git LFS** — binaries (png/ttf/audio/models…) are stored as plain git blobs. `.gitattributes` marks them `binary` so git skips diffs/merges. Never reintroduce `filter=lfs`.
 - **No git hooks**: the pre-push compile check was removed. Verify compilation yourself (see below); CI still gates PRs.
 - **Style**: root `.editorconfig` (hints only — not a gate).
@@ -38,7 +38,7 @@ Thanks for your interest in improving this project. This document explains how t
 Catch compile errors headlessly:
 
 ```bash
-~/Unity/Hub/Editor/2022.3.2f1/Editor/Unity \
+~/Unity/Hub/Editor/2022.3.62f3/Editor/Unity \
   -batchmode -nographics -quit \
   -projectPath "$PWD" -logFile /tmp/unity-compile.log
 grep -n "error CS" /tmp/unity-compile.log   # must print nothing
