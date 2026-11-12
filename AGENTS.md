@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Unity **2022.3.2f1** (Unity 2022.3 LTS) URP starter (C#). Verify C# with Unity batchmode (see **Verify changes** — no wrapper script, no git hooks). Style: root **`.editorconfig`** (hints only). CI: GitHub Actions under `.github/workflows/` (PR compile gate `unity-compile` + itch.io deploy + Drive retrieve/track).
+Unity **2022.3.62f3** (Unity 2022.3 LTS) URP starter (C#). Verify C# with Unity batchmode (see **Verify changes** — no wrapper script, no git hooks). Style: root **`.editorconfig`** (hints only). CI: GitHub Actions under `.github/workflows/` (PR compile gate `unity-compile` + itch.io deploy + Drive retrieve/track).
 
 ## Sources of truth
 
@@ -99,7 +99,7 @@ env:
 - **Drive tooling:** `pip install -r requirements.txt`, then `python3 scripts/test_state.py` after touching `core/state.py` / `track.py` / `retrieve.py` (state tests are dependency-free and pass as-is).
 
 ```bash
-~/Unity/Hub/Editor/2022.3.2f1/Editor/Unity \
+~/Unity/Hub/Editor/2022.3.62f3/Editor/Unity \
   -batchmode -nographics -quit \
   -projectPath "$PWD" -logFile /tmp/unity-compile.log
 grep -n "error CS" /tmp/unity-compile.log
