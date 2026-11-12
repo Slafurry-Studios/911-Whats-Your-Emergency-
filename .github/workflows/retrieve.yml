@@ -33,7 +33,8 @@ env:
 
 jobs:
   retrieve:
-    runs-on: ubuntu-latest
+    # Pin to ubuntu-22.04: ubuntu-latest (26.04) breaks buildalon/unity-setup@v2.
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
@@ -237,8 +238,8 @@ jobs:
       - retrieve
 
     if: failure()
-
-    runs-on: ubuntu-latest
+    # Pin to ubuntu-22.04: ubuntu-latest (26.04) breaks buildalon/unity-setup@v2.
+    runs-on: ubuntu-22.04
 
     steps:
 

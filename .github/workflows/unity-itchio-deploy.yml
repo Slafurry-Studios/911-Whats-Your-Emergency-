@@ -40,8 +40,9 @@ jobs:
 
   build:
     name: Build WebGL
-
-    runs-on: ubuntu-latest
+    # Pin to ubuntu-22.04: ubuntu-latest (26.04) breaks buildalon/unity-setup@v2
+    # because Unity Hub can't install at /opt/unityhub/unityhub.
+    runs-on: ubuntu-22.04
 
     steps:
 
@@ -136,8 +137,8 @@ jobs:
 
     needs:
       - build
-
-    runs-on: ubuntu-latest
+    # Pin to ubuntu-22.04: ubuntu-latest (26.04) breaks buildalon/unity-setup@v2.
+    runs-on: ubuntu-22.04
 
     outputs:
       version: ${{ steps.version.outputs.value }}
@@ -211,8 +212,8 @@ jobs:
       - deploy
 
     if: inputs.release_tag != ''
-
-    runs-on: ubuntu-latest
+    # Pin to ubuntu-22.04: ubuntu-latest (26.04) breaks buildalon/unity-setup@v2.
+    runs-on: ubuntu-22.04
 
     steps:
 
@@ -313,8 +314,8 @@ jobs:
       - deploy
 
     if: needs.deploy.result == 'success'
-
-    runs-on: ubuntu-latest
+    # Pin to ubuntu-22.04: ubuntu-latest (26.04) breaks buildalon/unity-setup@v2.
+    runs-on: ubuntu-22.04
 
     steps:
 
@@ -429,8 +430,8 @@ jobs:
       - deploy
 
     if: failure()
-
-    runs-on: ubuntu-latest
+    # Pin to ubuntu-22.04: ubuntu-latest (26.04) breaks buildalon/unity-setup@v2.
+    runs-on: ubuntu-22.04
 
     steps:
 
