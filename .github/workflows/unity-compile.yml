@@ -44,6 +44,10 @@ jobs:
         shell: bash
         run: |
           sudo apt-get update -qq
+          sudo apt-get install -y -qq gnupg curl ca-certificates
+          curl -fsSL https://hub.unity3d.com/linux/keys/public | sudo gpg --dearmor -o /usr/share/keyrings/unityhub.gpg
+          echo "deb [signed-by=/usr/share/keyrings/unityhub.gpg] https://hub-dist.unity3d.com/artifactory/hub-debian-prod-local stable main" | sudo tee /etc/apt/sources.list.d/unityhub.list
+          sudo apt-get update -qq
           sudo apt-get install -y -qq unityhub
           sudo mkdir -p /opt/unityhub
           sudo ln -sf "$(which unityhub)" /opt/unityhub/unityhub
