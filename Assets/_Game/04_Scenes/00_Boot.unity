@@ -260,7 +260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a565c8ffbeeb237cf845197f23474a59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slafurry.Systems.Bootstrap.BootstrapLoader
-  targetScene: {fileID: 11400000, guid: 6c79cb7d413e0173caebeba55dad2f32, type: 2}
+  targetScene: {fileID: 11400000, guid: a74ade2b0c23b440594f54aa7f7a4574, type: 2}
   systemsToWaitFor: []
   minimumDelay: 0
 --- !u!1 &721020367
