@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Slafurry.Systems.InputHub;
 
 namespace Slafurry.UI.HUD.Phone
 {
@@ -12,14 +13,26 @@ namespace Slafurry.UI.HUD.Phone
         [SerializeField] private Button _callButton;
         [SerializeField] private TMP_Text _callLabel;
 
+        [Header("Tab Slide")]
+        [SerializeField] private float _hiddenOffsetY = -400f;
+        [SerializeField] private float _slideSpeed = 1000f;
+
         private bool _signalSubscribed;
         private bool _batterySubscribed;
         private bool _volumeSubscribed;
         private bool _callSubscribed;
+        private bool _tabSubscribed;
         private bool _syncingVolume;
+        private bool _isOpen = true;
+
+        private RectTransform _rect;
+        private Vector2 _shownPos;
 
         private void Awake()
         {
+            _rect = (RectTransform)transform;
+            _shownPos = _rect.anchoredPosition;
+
             if (_volumeSlider != null)
                 _volumeSlider.onValueChanged.AddListener(OnVolumeSliderChanged);
 
@@ -56,6 +69,31 @@ namespace Slafurry.UI.HUD.Phone
                 OnCallChanged(PhoneCall.Instance.IsOnCall);
                 _callSubscribed = true;
             }
+
+            if (!_tabSubscribed && InputHub.Instance != null)
+            {
+                Controls.OnTabPressed += OnTabPressed;
+                _tabSubscribed = true;
+            }
+
+            Slide();
+        }
+
+        private void Slide()
+        {
+            Vector2 target = _isOpen
+                ? _shownPos
+                : _shownPos + Vector2.up * _hiddenOffsetY;
+
+            _rect.anchoredPosition = Vector2.MoveTowards(
+                _rect.anchoredPosition, target, _slideSpeed * Time.deltaTime);
+        }
+
+        private void OnTabPressed()
+        {
+            if (!Controls.IsInputEnabled) return;
+
+            _isOpen = !_isOpen;
         }
 
         private void OnSignalChanged(int level)
@@ -119,6 +157,12 @@ namespace Slafurry.UI.HUD.Phone
 
             if (_callSubscribed && PhoneCall.Instance != null)
                 PhoneCall.Instance.OnCallChanged -= OnCallChanged;
+
+            if (_tabSubscribed)
+            {
+                Controls.OnTabPressed -= OnTabPressed;
+                _tabSubscribed = false;
+            }
         }
     }
 }

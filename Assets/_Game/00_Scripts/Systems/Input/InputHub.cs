@@ -99,6 +99,54 @@ namespace Slafurry.Systems.InputHub
             }
         }
 
+        public static event Action OnFlashlightPressed
+        {
+            add
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnFlashlightPressed += value;
+            }
+            remove
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnFlashlightPressed -= value;
+            }
+        }
+
+        public static event Action OnVolIncPressed
+        {
+            add
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnVolIncPressed += value;
+            }
+            remove
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnVolIncPressed -= value;
+            }
+        }
+
+        public static event Action OnVolDecPressed
+        {
+            add
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnVolDecPressed += value;
+            }
+            remove
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnVolDecPressed -= value;
+            }
+        }
+
+        public static event Action OnTabPressed
+        {
+            add
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnTabPressed += value;
+            }
+            remove
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnTabPressed -= value;
+            }
+        }
+
         public static bool IsInputEnabled => InputHub.Instance != null && InputHub.Instance.IsInputEnabled;
 
         public static void EnableInput()
@@ -128,12 +176,20 @@ namespace Slafurry.Systems.InputHub
 
         public event Action OnSprintStarted;
         public event Action OnSprintCanceled;
+        public event Action OnFlashlightPressed;
+        public event Action OnVolIncPressed;
+        public event Action OnVolDecPressed;
+        public event Action OnTabPressed;
 
         private InputAction _jumpAction;
         private InputAction _moveAction;
         private InputAction _crouchAction;
         private InputAction _interactAction;
         private InputAction _sprintAction;
+        private InputAction _flashlightAction;
+        private InputAction _volIncAction;
+        private InputAction _volDecAction;
+        private InputAction _tabAction;
         private InputActionMap _gameplayMap;
 
         public bool IsInputEnabled { get; private set; } = true;
@@ -167,6 +223,20 @@ namespace Slafurry.Systems.InputHub
                 _sprintAction.started += ctx => OnSprintStarted?.Invoke();
                 _sprintAction.canceled += ctx => OnSprintCanceled?.Invoke();
             }
+
+            _flashlightAction = _gameplayMap.FindAction("Flashlight");
+            _volIncAction = _gameplayMap.FindAction("VolInc");
+            _volDecAction = _gameplayMap.FindAction("VolDec");
+            _tabAction = _gameplayMap.FindAction("Tab");
+
+            if (_flashlightAction != null)
+                _flashlightAction.performed += ctx => OnFlashlightPressed?.Invoke();
+            if (_volIncAction != null)
+                _volIncAction.performed += ctx => OnVolIncPressed?.Invoke();
+            if (_volDecAction != null)
+                _volDecAction.performed += ctx => OnVolDecPressed?.Invoke();
+            if (_tabAction != null)
+                _tabAction.performed += ctx => OnTabPressed?.Invoke();
 
             _gameplayMap.Enable();
             IsInputEnabled = true;
