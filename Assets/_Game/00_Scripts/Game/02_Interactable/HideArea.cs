@@ -13,6 +13,8 @@ public class HideArea : MonoBehaviour, IInteractable
 
     public string InteractionPrompt => _interactionPrompt;
 
+    public bool CanInteract => true;
+
     private void OnEnable()
     {
         if (_areaSprite == null)

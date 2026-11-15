@@ -16,6 +16,8 @@ public class Door : BaseTrigger, IInteractable
 
     public string InteractionPrompt => _isOpen ? _promptOpen : _promptClosed;
 
+    public bool CanInteract => CanTrigger();
+
     private void Awake()
     {
         _renderer = GetComponent<SpriteRenderer>();

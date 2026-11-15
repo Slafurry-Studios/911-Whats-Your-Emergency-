@@ -4,5 +4,6 @@ namespace Slafurry.Core.Interface
     {
         void Interact();
         string InteractionPrompt { get; }
+        bool CanInteract { get; }
     }
 }

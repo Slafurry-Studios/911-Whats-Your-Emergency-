@@ -14,6 +14,8 @@ public class InteractItemDebug : MonoBehaviour, IInteractable
 
     public string InteractionPrompt => _interactionPrompt;
 
+    public bool CanInteract => true;
+
     private void Awake() => _renderer = GetComponent<SpriteRenderer>();
 
     private void OnEnable()
