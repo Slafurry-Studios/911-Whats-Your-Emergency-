@@ -26,6 +26,14 @@ public class PhoneBattery : MonoBehaviour
         OnChanged?.Invoke(Percent);
     }
 
+    private void Update()
+    {
+        if (Percent <= 0f) return;
+        if (_data.BatteryDrainPerSecond <= 0f) return;
+
+        SetPercent(Percent - _data.BatteryDrainPerSecond * Time.deltaTime);
+    }
+
     public void SetPercent(float percent)
     {
         float clamped = Mathf.Clamp(percent, 0f, 100f);
