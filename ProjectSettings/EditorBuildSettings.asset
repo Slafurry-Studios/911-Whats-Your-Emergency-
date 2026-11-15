@@ -6,8 +6,32 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Game/04_Scenes/Boot.unity
+    path: Assets/_Game/04_Scenes/00_Boot.unity
     guid: 2aa2100dc78698e69be1c84e6114ab4d
+  - enabled: 1
+    path: Assets/_Game/04_Scenes/01_MainMenuScene.unity
+    guid: ad034dae3a00a47f7ae4f88276083d0c
+  - enabled: 1
+    path: Assets/_Game/04_Scenes/02_SettingsScene.unity
+    guid: 29aae87b317b7b3c8abca3945474007a
+  - enabled: 1
+    path: Assets/_Game/04_Scenes/03_AboutScene.unity
+    guid: a2b37f11c061dc6039dcd30508c7bf56
+  - enabled: 1
+    path: Assets/_Game/04_Scenes/04_IntroCutscene.unity
+    guid: 1e9e202eadff3c36a9b52a07ff374073
+  - enabled: 1
+    path: Assets/_Game/04_Scenes/05_GameplayScene.unity
+    guid: 41eeccf9e14bc82498b20cd2f970888a
+  - enabled: 1
+    path: Assets/_Game/04_Scenes/06_GameOverScene.unity
+    guid: 6775f637caa7ebaaaa43efd8352dd444
+  - enabled: 1
+    path: Assets/_Game/04_Scenes/07_EndingCutscene.unity
+    guid: 72a6b320b353dd2a99c425c3af295153
+  - enabled: 1
+    path: Assets/_Game/04_Scenes/08_CreditsScene.unity
+    guid: cb09ba6b469ffdcddaa5b28538119dfe
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: befec698e108ad6c6af4d3aaeaa0f9b0,
       type: 3}
