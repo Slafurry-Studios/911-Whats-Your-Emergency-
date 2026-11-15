@@ -28,7 +28,7 @@ namespace Slafurry.UI.HUD.Interact
         private void Refresh()
         {
             var interact = PlayerInteract.Instance;
-            bool show = _current != null && interact != null && interact.CanInteract;
+            bool show = _current != null && interact != null && interact.CanInteract && _current.CanInteract;
             _text.enabled = show;
             if (show) _text.text = $"[E] {_current.InteractionPrompt}";
         }

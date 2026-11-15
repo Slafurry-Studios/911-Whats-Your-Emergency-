@@ -17,8 +17,8 @@ namespace Slafurry.Utils.UI
         [SerializeField] private float dimAlphaWhileDragging = 0.6f;
 
         [Header("Events")]
-        [SerializeField] private UnityEvent onDragStarted;
-        [SerializeField] private UnityEvent<Vector2> onDragEnded;
+        public UnityEvent onDragStarted;
+        public UnityEvent<Vector2> onDragEnded;
 
         private RectTransform _rectTransform;
         private Vector2 _originalAnchoredPosition;

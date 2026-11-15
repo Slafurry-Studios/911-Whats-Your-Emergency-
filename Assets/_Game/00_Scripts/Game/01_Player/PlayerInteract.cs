@@ -49,7 +49,7 @@ public class PlayerInteract : BaseTrigger
         foreach (var hit in hits)
         {
             var interactable = hit.gameObject.GetComponent<IInteractable>();
-            if (interactable == null) continue;
+            if (interactable == null || !interactable.CanInteract) continue;
 
             float distance = Vector2.Distance(transform.position, hit.transform.position);
             if (distance < nearestDistance)
@@ -70,7 +70,7 @@ public class PlayerInteract : BaseTrigger
     {
         if (!Controls.IsInputEnabled) return;
         if (!CanTrigger()) return;
-        if (CurrentTarget == null) return;
+        if (CurrentTarget == null || !CurrentTarget.CanInteract) return;
 
         CurrentTarget.Interact();
         AddTriggerCount();

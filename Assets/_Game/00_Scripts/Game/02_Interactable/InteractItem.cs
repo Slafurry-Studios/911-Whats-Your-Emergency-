@@ -11,6 +11,8 @@ public class InteractItem : MonoBehaviour, IInteractable
 
     public string InteractionPrompt => _interactionPrompt;
 
+    public bool CanInteract => !_collected;
+
     public void Interact()
     {
         if (_collected) return;

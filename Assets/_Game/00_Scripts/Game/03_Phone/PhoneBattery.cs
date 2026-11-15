@@ -31,7 +31,11 @@ public class PhoneBattery : MonoBehaviour
         if (Percent <= 0f) return;
         if (_data.BatteryDrainPerSecond <= 0f) return;
 
-        SetPercent(Percent - _data.BatteryDrainPerSecond * Time.deltaTime);
+        float drain = _data.BatteryDrainPerSecond;
+        if (PlayerHide.Instance != null && PlayerHide.Instance.IsHidden)
+            drain *= _data.HiddenDrainMultiplier;
+
+        SetPercent(Percent - drain * Time.deltaTime);
     }
 
     public void SetPercent(float percent)
