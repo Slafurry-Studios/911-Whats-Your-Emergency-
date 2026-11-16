@@ -16,7 +16,8 @@ permissions:
 env:
   # Non-credential (Settings → Secrets and variables → Actions → Variables)
   GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.5-flash' }}
-  GEMINI_PERSONA: ${{ vars.GEMINI_PERSONA }}
+  # Asset-bot persona — distinct from deploy bot (vars.GEMINI_PERSONA).
+  GEMINI_PERSONA: ${{ vars.GEMINI_PERSONA_ASSET || 'You are the Drive Archivist for Slafurry Studios, a friendly no-nonsense librarian of game assets. You announce Drive changes (new, changed, deleted files) as if updating the studio inventory log. Precise, tidy, zero fluff. Call the team "Tim". Keep every message under 3 sentences, no markdown.' }}
   DRIVE_SPRITE_FOLDER_ID: ${{ vars.DRIVE_SPRITE_FOLDER_ID }}
   DRIVE_AUDIO_FOLDER_ID: ${{ vars.DRIVE_AUDIO_FOLDER_ID }}
   BOT_GIT_USERNAME: ${{ vars.BOT_GIT_USERNAME || 'Kozeki Ui' }}
@@ -123,87 +124,50 @@ jobs:
           git status --short Assets/_Game/02_Art/Sprite Assets/_Game/03_Audio \
             | grep '\.meta$' | head -50 || true
 
-      # Persist retrieve bookkeeping (retrieve_status / downloaded_*) on main immediately.
-      # Assets still go through chore/asset → PR; state alone must not wait on a merge
-      # or the next run reloads empty/stale state from main and re-notifies.
-      - name: Commit state to main
-        id: state_commit
-        run: |
-          git config user.name "$BOT_GIT_USERNAME"
-          git config user.email "$BOT_GIT_EMAIL"
-
-          git fetch origin main
-          git checkout -B main origin/main
-
-          git add state/
-
-          if git diff --cached --quiet; then
-            echo "No state changes."
-            echo "has_state=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          git commit -m "chore(assets): update drive state [skip ci]"
-          git push origin HEAD:main
-          echo "has_state=true" >> "$GITHUB_OUTPUT"
-
-      - name: Commit retrieved files to chore/asset
+      # State + assets land on retrieve-assets (force-pushed), never main directly.
+      # main ruleset requires a PR; retrieve-assets is not the default branch, so
+      # plain GITHUB_TOKEN force-push works. Merge the PR to land state on main —
+      # until merged, next run re-syncs stale state from main (merge promptly).
+      - name: Commit state and assets to retrieve-assets
         id: commit
         run: |
           git config user.name "$BOT_GIT_USERNAME"
           git config user.email "$BOT_GIT_EMAIL"
 
-          # Rebuild chore/asset from main so it includes the state commit above.
           git fetch origin main
+          # Rebase local HEAD onto latest main (keeps working-tree changes).
+          git checkout -B main origin/main
 
-          WORKTREE=/tmp/chore-asset
-
-          # Always recreate chore/asset from latest main.
-          # This avoids inheriting the broken branch history/state.
-          git branch -D chore/asset 2>/dev/null || true
-          git push origin --delete chore/asset 2>/dev/null || true
-
-          git worktree add -b chore/asset "$WORKTREE" origin/main
-
-          mkdir -p \
-            "$WORKTREE/Assets/_Game/02_Art/Sprite" \
-            "$WORKTREE/Assets/_Game/03_Audio"
-
-          cp -rf Assets/_Game/02_Art/Sprite/. \
-            "$WORKTREE/Assets/_Game/02_Art/Sprite/" 2>/dev/null || true
-
-          cp -rf Assets/_Game/03_Audio/. \
-            "$WORKTREE/Assets/_Game/03_Audio/" 2>/dev/null || true
-
-          cd "$WORKTREE"
-
+          # Local commit only — force-pushed to retrieve-assets, never main.
           git add \
+            state/ \
             Assets/_Game/02_Art/Sprite \
             Assets/_Game/03_Audio
 
           if git diff --cached --quiet; then
-            echo "No asset changes, skipping."
+            echo "No changes, skipping."
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          git commit -m "chore(assets): retrieve new drive files [skip ci]"
-          git push origin HEAD:chore/asset
+          git commit -m "chore(assets): retrieve drive files and state [skip ci]"
+          git push -f origin HEAD:retrieve-assets
 
           echo "has_changes=true" >> "$GITHUB_OUTPUT"
 
       - name: Create PR
         if: steps.commit.outputs.has_changes == 'true'
         run: |
-          cd /tmp/chore-asset
-
           TITLE="chore(assets): retrieve new drive files"
-          BODY="Automated asset sync from Google Drive.
+          BODY="Automated asset + state sync from Google Drive.
+
+          State and assets land here first; merge to main to accept.
+          Force-pushed every retrieve run — do not commit to this branch manually.
 
           Last updated: $(date -u +'%Y-%m-%d %H:%M UTC')"
 
           OPEN_PR=$(gh pr list \
-            --head chore/asset \
+            --head retrieve-assets \
             --state open \
             --repo "$GITHUB_REPOSITORY" \
             --json number \
@@ -219,7 +183,7 @@ jobs:
             echo "No open PR found, creating a new one."
             gh pr create \
               --base main \
-              --head chore/asset \
+              --head retrieve-assets \
               --title "$TITLE" \
               --body "$BODY" \
               --repo "$GITHUB_REPOSITORY"

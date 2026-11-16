@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 # ------------------------------------------------------------
 # All config lives here — never hardcode values in run steps.
@@ -17,7 +18,8 @@ permissions:
 env:
   # Non-credential (Settings → Secrets and variables → Actions → Variables)
   GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.5-flash' }}
-  GEMINI_PERSONA: ${{ vars.GEMINI_PERSONA }}
+  # Asset-bot persona — distinct from deploy bot (vars.GEMINI_PERSONA).
+  GEMINI_PERSONA: ${{ vars.GEMINI_PERSONA_ASSET || 'You are the Drive Archivist for Slafurry Studios, a friendly no-nonsense librarian of game assets. You announce Drive changes (new, changed, deleted files) as if updating the studio inventory log. Precise, tidy, zero fluff. Call the team "Tim". Keep every message under 3 sentences, no markdown.' }}
   DRIVE_SPRITE_FOLDER_ID: ${{ vars.DRIVE_SPRITE_FOLDER_ID }}
   DRIVE_AUDIO_FOLDER_ID: ${{ vars.DRIVE_AUDIO_FOLDER_ID }}
   BOT_GIT_USERNAME: ${{ vars.BOT_GIT_USERNAME || 'Kozeki Ui' }}
@@ -72,26 +74,68 @@ jobs:
             --project-name "$GITHUB_REPOSITORY (audio)"
 
       # State is bookkeeping (deleted_in_drive flags, retrieve timestamps), not assets.
-      # It MUST land on main — chore/asset is recreated from main every run, so pushing
-      # state only there meant the next track run re-detected the same deletes and
-      # re-notified Discord every day.
-      - name: Commit updated state to main
+      # main ruleset requires a PR — state lands on retrieve-assets via force-push,
+      # then the PR merges it into main. Force push only touches retrieve-assets;
+      # never main directly. Merge promptly or next run sees stale state and
+      # re-notifies the same deletes.
+      - name: Commit updated state to retrieve-assets
+        id: state_commit
         run: |
           git config user.name "$BOT_GIT_USERNAME"
           git config user.email "$BOT_GIT_EMAIL"
 
           git fetch origin main
+          # Rebase local HEAD onto latest main (keeps working-tree changes).
           git checkout -B main origin/main
 
+          # Local commit only — force-pushed to retrieve-assets below, never main.
           git add state/
 
           if git diff --cached --quiet; then
             echo "No state changes, skipping."
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
           git commit -m "chore(assets): update drive state [skip ci]"
-          git push origin HEAD:main
+          git push -f origin HEAD:retrieve-assets
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+
+      - name: Ensure PR
+        if: steps.state_commit.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.PR_PAT || secrets.GITHUB_TOKEN }}
+        run: |
+          TITLE="chore(assets): update drive state"
+          BODY="Automated state sync from Google Drive track run.
+
+          State lands here first; merge to main to accept.
+          Force-pushed every track run — do not commit to this branch manually.
+
+          Last updated: $(date -u +'%Y-%m-%d %H:%M UTC')"
+
+          OPEN_PR=$(gh pr list \
+            --head retrieve-assets \
+            --state open \
+            --repo "$GITHUB_REPOSITORY" \
+            --json number \
+            --jq '.[0].number')
+
+          if [ -n "$OPEN_PR" ]; then
+            echo "Open PR #$OPEN_PR already exists."
+            gh pr edit "$OPEN_PR" \
+              --title "$TITLE" \
+              --body "$BODY" \
+              --repo "$GITHUB_REPOSITORY"
+          else
+            echo "No open PR found, creating a new one."
+            gh pr create \
+              --base main \
+              --head retrieve-assets \
+              --title "$TITLE" \
+              --body "$BODY" \
+              --repo "$GITHUB_REPOSITORY"
+          fi
 
 
   # ============================================================

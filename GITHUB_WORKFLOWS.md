@@ -4,9 +4,9 @@ CI/CD lives in [`.github/workflows/`](./.github/workflows/). Four workflows are 
 
 | Workflow | File | Trigger | What it does |
 |---|---|---|---|
-| Unity Compile | `unity-compile.yml` | **Pull requests** (paths: `Assets/`, `Packages/`, `ProjectSettings/`) | Batchmode compile gate — fails the PR on `error CS` or non-successful Unity exit |
-| Track Drive Changes | `track.yml` | Daily at 07:00 WITA (cron `0 23 * * *`) + manual | Scans Google Drive sprite/audio folders, updates `state/` manifests **on `main`** (`[skip ci]`), Discord-notifies new/changed/removed-once |
-| Retrieve New Drive Files | `retrieve.yml` | Manual only | Downloads new Drive files into `Assets/_Game/02_Art/Sprite` and `Assets/_Game/03_Audio`; commits **state → `main`** immediately; assets → disposable `chore/asset` PR → `main` |
+| Unity Compile | `unity-compile.yml` | **Pull requests** (paths: `Assets/`, `Packages/`, `ProjectSettings/`, the workflow file itself) | Batchmode compile gate — fails the PR on `error CS` or non-successful Unity exit |
+| Track Drive Changes | `track.yml` | Daily at 07:00 WITA (cron `0 23 * * *`) + manual | Scans Google Drive sprite/audio folders, updates `state/` manifests on **`retrieve-assets`** branch (`[skip ci]`), opens/updates PR → `main`, Discord-notifies new/changed/removed-once |
+| Retrieve New Drive Files | `retrieve.yml` | Manual only | Downloads new Drive files into `Assets/_Game/02_Art/Sprite` and `Assets/_Game/03_Audio`; commits **state + assets → `retrieve-assets`** branch (force-push) → single PR → `main` |
 | Build and Deploy to itch.io | `unity-itchio-deploy.yml` | Manual only | Builds WebGL with Unity, pushes to itch.io via butler, optionally creates a GitHub Release, then posts a Discord announcement |
 
 ## Setup (repository secrets & variables)
@@ -30,7 +30,7 @@ All configuration is done under **Settings → Secrets and variables → Actions
 | `UNITY_EMAIL` | compile, deploy, retrieve | Unity account email (Personal license activation) |
 | `UNITY_PASSWORD` | compile, deploy, retrieve | Unity account password |
 | `BUTLER_API_KEY` | deploy | itch.io butler API key ([create here](https://itch.io/user/settings/api-keys)) |
-| `PR_PAT` | retrieve | Optional. Personal access token for creating the asset PR; falls back to the default `GITHUB_TOKEN` |
+| `PR_PAT` | track, retrieve | Optional. Personal access token for creating/updating the `retrieve-assets` PR; falls back to the default `GITHUB_TOKEN` |
 
 **Variables** (Settings → Variables → Actions) — non-credential config:
 
@@ -39,7 +39,8 @@ All configuration is done under **Settings → Secrets and variables → Actions
 | `DRIVE_SPRITE_FOLDER_ID` | track, retrieve | — | Google Drive folder ID for sprites (**required** for asset workflows) |
 | `DRIVE_AUDIO_FOLDER_ID` | track, retrieve | — | Google Drive folder ID for audio (**required** for asset workflows) |
 | `GEMINI_MODEL` | track, retrieve, deploy | `gemini-2.5-flash` | Gemini model ID |
-| `GEMINI_PERSONA` | track, retrieve, deploy | deploy only (see workflow) | Persona prompt used when tagging assets / writing announcements |
+| `GEMINI_PERSONA` | deploy | — (deploy workflow has its own inline default) | Deploy/release announcer persona |
+| `GEMINI_PERSONA_ASSET` | track, retrieve | inline "Drive Archivist" default | Asset-sync bot persona — intentionally **different** from the deploy bot |
 | `GEMINI_LANGUAGE` | deploy | *(empty)* | Force the announcement language (e.g. `Indonesian`) |
 | `BOT_GIT_USERNAME` / `BOT_GIT_EMAIL` | track, retrieve | `Kozeki Ui` / bot noreply | Commit author for bot commits |
 | `ITCH_USER` | deploy | — | Your itch.io username (**required**) |
@@ -63,7 +64,7 @@ All configuration is done under **Settings → Secrets and variables → Actions
 
 - **PR compile gate**: require the `Batchmode compile` check in branch protection (**Settings → Branches**) so broken C# cannot merge. Docs-only PRs skip the workflow via path filters.
 - **Failure Discord**: deploy / track / retrieve each have a `notify-failure` job (`if: failure()`) that posts a Gemini-written embed to the same webhook as success (`DISCORD_WEBHOOK_URL_DEPLOY` for deploy, `DISCORD_WEBHOOK_URL` for asset bots) — matches Potkeeter.
-- **Asset flow**: `track` detects changes and **persists `state/` to `main`** (so `deleted_in_drive` / retrieve timestamps stick — otherwise Discord re-notifies the same deletes every day). `retrieve` downloads files, also **persists `state/` to `main`**, then opens a PR for **assets only** (`chore/asset` → `main`). Review and merge the asset PR to accept files. The `chore/asset` branch is recreated from `main` on every run — never push to it manually.
+- **Asset flow**: `main` ruleset requires every change via PR — bots never push `main` directly (that was the GH013 failure). Both `track` and `retrieve` force-push a single disposable **`retrieve-assets`** branch (state + assets) and open/update one PR → `main`. Merge the PR to land state on main; until merged, the next run re-syncs stale state from main and Discord re-notifies the same deletes — **merge promptly**. Do not commit to `retrieve-assets` manually; it is force-pushed every run. (Replaces the old `chore/asset` branch.)
 - **`.meta` generation**: after downloading, `retrieve` runs a Unity batchmode import so every new Drive file gets its generated `.meta` (stable GUID + import settings). Those `.meta` files are committed in the asset PR. Requires `UNITY_EMAIL`/`UNITY_PASSWORD` (same secrets as compile/deploy).
 - Bot commits include `[skip ci]` so they don't trigger other workflows.
 - **Deploy requirements**: the project must have `Assets/Editor/BuildScript.cs` with a `BuildScript.Build` method (already present) and a valid Unity Personal license (`UNITY_EMAIL`/`UNITY_PASSWORD`). No Git LFS — every checkout action is plain `actions/checkout@v4` and binaries are regular blobs.

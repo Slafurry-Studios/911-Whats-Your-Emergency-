@@ -19,7 +19,7 @@ Assets/_Game/          # all game content
   03_Audio/            # GameAudioMixer.mixer (+ Music/, SFX/)
   04_Scenes/           # 00_Boot.unity + 8 more (all enabled in Build Settings)
   05_Settings/         # URP, Input
-Assets/Editor/         # BuildScript.cs + GameAssetCreator (Editor-only code)
+Assets/Editor/         # BuildScript.cs only (Editor-only code)
 Assets/_Vendor/        # third-party — do not edit, do not commit churn
 .github/workflows/     # unity-compile (PR), unity-itchio-deploy, retrieve, track
 scripts/test_state.py  # Drive state regressions
@@ -33,12 +33,12 @@ retrieve.py, track.py, core/, state/, requirements.txt  # Drive → assets tooli
 ## Boot / lifecycle (easy to get wrong)
 
 - `LoadingSystem` must exist first — in `Assets/_Game/04_Scenes/00_Boot.unity` on root GameObject `====== LOADING ======`. New systems attach to root `====== SYSTEM ======` (alongside `SceneLoader`, `SaveSystem`, `InputHub`, `PauseSystem`, `LocalizationSystem`) or their own root.
-- `Singleton`/`Manager` `Awake` is private, sealed, and auto-calls `LoadingSystem.Instance.Register(this)`. Override `OnSingletonAwake()` / `OnManagerAwake()` for subclass setup.
+- `Awake`/`Start` on base classes are private and sealed. `Singleton` registers with `LoadingSystem` in `Start()`; `Manager` registers in `Awake()`. Override `OnSingletonAwake()` / `OnManagerAwake()` for subclass setup.
 - `Initialize()` = internal setup only (no other-object refs). It is an `IEnumerator` coroutine — `LoadingSystem` yields it with a per-object timeout (default 10s). Cross-object wiring only in `PostInitialize()`. Avoid `Start()` (guard with `_isReady` if unavoidable).
 - `IInitializable.Priority` orders boot (lower first). Late registrants after boot get a one-frame delayed batch.
-- Base class: cross-scene singleton → `GameSystem<T>`; scene-bound singleton → `LocalSingleton<T>`; session coordinator → `Manager` (registers with `GameManager` in `PostInitialize` via abstract `RegisterToGameManager`/`OnPostInitialize`).
+- Base class: cross-scene singleton → `GameSystem<T>`; scene-bound singleton → `LocalSingleton<T>`; session coordinator → `Manager` (registers with `GameManager` in `PostInitialize` via abstract `RegisterToGameManager`/`UnregisterFromGameManager`/`OnPostInitialize`).
 - **`GameManager` does not exist** — `Manager.cs` and ARCHITECTURE still describe it. **Any `Manager` subclass will not compile** until you add one (or drop the abstract hooks). No subclasses exist today.
-- `BootstrapLoader` (Systems/Scene) is optional: wire `systemsToWaitFor` + `targetSceneName` if you add a boot scene. Default `targetSceneName` is `"MainMenu"`.
+- `BootstrapLoader` (Systems/Scene) is optional: wire `systemsToWaitFor` + `SceneReference targetScene` (no default — must assign in Inspector or it errors).
 
 ## Static facades (prefer over `.Instance` chains)
 
@@ -55,10 +55,10 @@ All four workflows declare config in `env:`; `run:` steps read `"$NAME"` only.
 
 **Secrets** (credentials): `GEMINI_API_KEY`, `GOOGLE_SERVICE_ACCOUNT_JSON_B64`, `DISCORD_WEBHOOK_URL`, `DISCORD_WEBHOOK_URL_DEPLOY`, `UNITY_EMAIL`, `UNITY_PASSWORD`, `BUTLER_API_KEY`, `PR_PAT` (**retrieve only** — compile/deploy use default `GITHUB_TOKEN`).
 
-**Variables** (non-credential): `DRIVE_SPRITE_FOLDER_ID`, `DRIVE_AUDIO_FOLDER_ID`, `GEMINI_MODEL`, `GEMINI_PERSONA`, `GEMINI_LANGUAGE`, `BOT_GIT_USERNAME`, `BOT_GIT_EMAIL`, `ITCH_*`, `GAME_DISPLAY_NAME`, `UNITY_PROJECT_PATH`.
+**Variables** (non-credential): `DRIVE_SPRITE_FOLDER_ID`, `DRIVE_AUDIO_FOLDER_ID`, `GEMINI_MODEL`, `GEMINI_PERSONA` (deploy only), `GEMINI_PERSONA_ASSET` (track/retrieve), `GEMINI_LANGUAGE`, `BOT_GIT_USERNAME`, `BOT_GIT_EMAIL`, `ITCH_*`, `GAME_DISPLAY_NAME`, `UNITY_PROJECT_PATH`.
 
 - **Retrieve** runs a Unity batchmode import after download so new Drive files get generated `.meta` — requires `UNITY_EMAIL`/`UNITY_PASSWORD`.
-- **Deploy inputs**: `platforms` (All/Windows/macOS/WebGL) · `release_type` (release/beta/alpha) · `release_tag` (`1.2.3` → `v1.2.3-release`/`-beta`/`-alpha`; empty = unversioned, no GitHub Release).
+- **Deploy inputs**: `release_type` (release/beta/alpha) · `release_tag` (`1.2.3` → `v1.2.3-release`/`-beta`/`-alpha`; empty = unversioned, no GitHub Release). WebGL only — no `platforms` input.
 - **Deploy changelogs**: `git log` changelog → Gemini writes Discord flavor text + GitHub Release body. No `generate_release_notes`.
 - `secrets.*` still appears inline in action `with:` inputs and failure-notify `env:` blocks — intentional, not drift.
 
@@ -67,12 +67,12 @@ All four workflows declare config in `env:`; `run:` steps read `"$NAME"` only.
 - **No Git LFS** — binaries are plain blobs; `.gitattributes` marks them `binary`. Do not reintroduce `filter=lfs`. Do not commit `_Vendor` churn.
 - **Commit `.meta`** with every new/renamed asset; never hand-edit GUIDs.
 - **Input System only** (`activeInputHandler: 2`). Actions: `Assets/_Game/05_Settings/Input/Main Input.inputactions` → generated `Main Input.cs` (regenerate in Unity after editing actions).
-- **Editor menu:** `Slafurry → Game Data` (GameAssetCreator). SO types for that window use `[GameAssetCreator(category, displayName, order)]`; other SOs use `[CreateAssetMenu]`.
+- **SO creation:** all live SO types use `[CreateAssetMenu]`. `GameAssetCreatorAttribute` exists in `Utils/Attributes` but the `Slafurry → Game Data` window was never implemented — do not document or rely on it.
 - `EditorBuildSettings` lists **9 enabled scenes** (`00_Boot` + 8 more). Do not assume only Boot is loadable.
 - `*.csproj` / `*.sln` are Editor-generated — never hand-edit or commit them.
 - **No git hooks** (`.githooks/pre-push` and `scripts/check-compile.sh` removed). Verify locally via batchmode.
 - **Drive bots re-sync from `origin/main`** every run: `retrieve.yml` `rm -rf`s `state/`, `02_Art/Sprite`, `03_Audio` then restores via `git archive origin/main`. Commit `GameAudioMixer.mixer` + local state to `main` before relying on those workflows.
-- **`track` / `retrieve` commit `state/` to `main`** (`[skip ci]`). Assets → `chore/asset` PR. `core/state.py` must keep retrieve fields when track merges a fresh listing (`scripts/test_state.py`).
+- **`track` / `retrieve` never push `main`** (ruleset GH013 — PR required). Both force-push one disposable **`retrieve-assets`** branch (state + assets) and open/update a PR → `main`; merge promptly or the next run re-syncs stale state and re-notifies Discord. Do not commit to `retrieve-assets` manually. `core/state.py` must keep retrieve fields when track merges a fresh listing (`scripts/test_state.py`).
 
 ## Verify changes
 
