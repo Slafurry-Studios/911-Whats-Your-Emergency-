@@ -47,8 +47,9 @@ Assets/_Game/
 │   ├── UI/         — reactive observers & screen coordination
 │   └── Utils/      — generic reusable helpers (GameFeel, extensions)
 ├── 01_Objects/     — prefabs & data, grouped by domain
+├── 02_Art/         — Drive-synced sprites
 ├── 03_Audio/       — GameAudioMixer + Music/SFX (Drive-synced clips)
-├── 04_Scenes/      — Boot.unity (in Build Settings)
+├── 04_Scenes/      — 00_Boot.unity + 8 more (all in Build Settings)
 └── 05_Settings/    — URP, Input
 ```
 
@@ -64,10 +65,10 @@ See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the full breakdown of base classe
 
 ### Setup
 ```bash
-git clone https://github.com/muhammadzaini213/Sourdough-Starter.git
-cd Sourdough-Starter
+git clone https://github.com/Slafurry-Studios/911-Whats-Your-Emergency-.git
+cd 911-Whats-Your-Emergency-
 ```
-Open the project in Unity Hub, let it import, then open `Assets/_Game/04_Scenes/Boot.unity`.
+Open the project in Unity Hub, let it import, then open `Assets/_Game/04_Scenes/00_Boot.unity`.
 
 ---
 

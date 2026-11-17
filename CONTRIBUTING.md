@@ -44,7 +44,7 @@ Catch compile errors headlessly:
 grep -n "error CS" /tmp/unity-compile.log   # must print nothing
 ```
 
-CI runs the same batchmode compile on **pull requests** (`unity-compile.yml`) and fails on `error CS`. Play-mode behavior still needs a manual Editor run (`Assets/_Game/04_Scenes/Boot.unity`).
+CI runs the same batchmode compile on **pull requests** (`unity-compile.yml`) and fails on `error CS`. Play-mode behavior still needs a manual Editor run (`Assets/_Game/04_Scenes/00_Boot.unity`).
 
 If you change Input actions, regenerate `Main Input.cs` in the Unity Editor after editing `Assets/_Game/05_Settings/Input/Main Input.inputactions`.
 
