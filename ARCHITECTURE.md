@@ -11,8 +11,9 @@ structure, base classes, and reasoning behind each decision — so the team
 Assets/_Game/           # all game content lives here (not Assets/ root)
 ├── 00_Scripts/         # all C# (see below)
 ├── 01_Objects/         # prefabs & ScriptableObjects, grouped by domain
+├── 02_Art/Sprite/       # Drive-synced sprites
 ├── 03_Audio/           # GameAudioMixer.mixer + Music/SFX (Drive-synced clips)
-├── 04_Scenes/          # Boot.unity (in Build Settings)
+├── 04_Scenes/          # 00_Boot.unity + 8 more (all enabled in Build Settings)
 └── 05_Settings/        # URP, Input System
 ```
 Numeric prefixes are used at root level because several root folders get
@@ -105,8 +106,9 @@ per entity → Controller.
 ### Communication contract between programmers
 `Manager` is the public front door. Internals (pools, private lists) stay
 `private`. Other programmers only need to call a Manager's public methods
-or `GameManager.Instance.X` to integrate — no need to open up someone
-else's system.
+or (once `GameManager` exists) `GameManager.Instance.X` to integrate — no
+need to open up someone else's system. **`GameManager` is not built yet**;
+`Manager` subclasses cannot compile until it is.
 
 ---
 
@@ -116,10 +118,7 @@ Enemy (root)
   ├── EnemyController.cs   ← thin hub, the only link between children
   ├── Stats/                (abstract Stats)
   ├── Brain/                (abstract Brain)
-  └── GameFeel/
-        ├── GameFeelController.cs
-        ├── HitBlink.cs
-        └── SquashStretch.cs
+  └── GameFeel/             (IGameFeelEffect components: Blink, SquashObject, …)
 ```
 - Children must NOT call each other directly / `GetComponentInParent` to
   reach a sibling.
@@ -133,19 +132,18 @@ Enemy (root)
 ---
 
 ## GameFeel system (`Utils/GameFeel/`)
-- `IGameFeelEffect` — single contract (`Play(GameFeelContext ctx)`) for
-  every effect (blink, squash, shake).
-- `GameFeelContext` — generic parameter struct (Intensity, Duration,
-  Direction, Color); each effect reads only the fields it needs.
-- Local effects (per-entity: blink, squash) → `GameFeelController` sitting
-  on the `GameFeel` child, `GetComponentsInChildren<IGameFeelEffect>()`
-  then loop `Play(ctx)`.
-- Global effects (one per scene: camera) → `LocalSingleton<T>`, called via
-  the static helper `GameFeel.ShakeCamera()` so callers don't need to
-  distinguish local vs global calls.
-- `CameraShake` is wired to Cinemachine Impulse Source/Listener (not
-  manual lerp) — automatic distance falloff, and reaches every Virtual
-  Camera in the scene for free.
+- `IGameFeelEffect` — contract (`PlayEffect()` / `StopEffect()`) for every
+  effect (blink, squash, shake, hitstop…).
+- `GameFeel` — plain `MonoBehaviour` hub (NOT a static facade). Holds a
+  serialized `IGameFeelEffect[]` and loops `PlayEffect()`/`StopEffect()`
+  over them.
+- Effects live in `Utils/GameFeel/Effects/` (`Blink`, `SquashObject`,
+  `CameraShake`, `HitStop`, `ScreenFlash`, …) and implement
+  `IGameFeelEffect` directly.
+- `CameraShake` needs a `CinemachineImpulseSource` on the same GameObject
+  (logs an error if missing) — distance falloff and Virtual Camera coverage
+  come from the Cinemachine Impulse listener, not manual lerp.
+- `ScreenFlash` is a `LocalSingleton<T>` (one overlay per scene).
 
 ---
 
@@ -154,12 +152,12 @@ Enemy (root)
 ### AudioSystem
 - `AudioSystem` (`GameSystem<AudioSystem>`) — mixer/volume hub, holds NO
   UI references (Slider/Text) at all. Exposes `OnMusicVolumeChanged` /
-  `OnSFXVolumeChanged` events; UI subscribes back via an observer
-  (`VolumeSliderUI` in `UI/`).
+  `OnSFXVolumeChanged` events; UI subscribes back via observers in
+  `UI/`.
 - `MusicPlayer` / `SFXPlayer` — NOT standalone singletons, accessed via
   `AudioSystem.Music` / `AudioSystem.SFX` (static shortcut properties).
 - `MusicData` / `SFXData` — `ScriptableObject`, pure data.
-  `SFXData` is categorized by domain (`Player`, `Enemy`, `UI`), each
+  `SFXData` references `SFXCategory` assets (string-named domains), each
   category gets its own `AudioSource` pool so one category's SFX can't be
   "stolen" by another category that's currently busy.
 - `MusicPlayer` subscribes to `SceneLoader.OnSceneLoadCompleted` (not
@@ -176,7 +174,7 @@ Enemy (root)
   `Priority`.
 - Pure logic — fires events (`OnProgressChanged`, `OnStatusChanged`,
   `OnLoadingComplete`), holds NO Slider/Text reference. UI
-  (`LoadingScreenUI`) subscribes separately in `UI/`.
+  subscribes separately in `UI/`.
 - Has a per-object timeout guard so a stuck `Initialize()` doesn't silently
   freeze the loading sequence forever.
 
@@ -207,13 +205,16 @@ Enemy (root)
 
 ## `01_Objects/` — Prefabs & ScriptableObjects
 ```
-Objects/
+01_Objects/
 ├── Prefabs/
-│   ├── Enemies/
-│   └── Weapons/
-├── Data/
-│   ├── Enemies/    — one prefab : many data variants (Easy/Normal/Hard)
-│   └── Weapons/
+│   └── System/        — system/scene objects (Camera, …)
+└── Data/
+    ├── 00_Scene/
+    ├── 01_Audio/
+    ├── 02_Player/
+    ├── 03_Item/
+    ├── 04_Phone/
+    └── Localization/
 ```
 `Prefabs/` and `Data/` are split at the top level (instead of mixed
 per-domain) because the prefab-to-data ratio is often 1:5+ (many
@@ -221,10 +222,6 @@ ScriptableObject variants per 1 prefab), and there's a real need to open
 `Data/` on its own during balancing without prefabs cluttering the view.
 Still nested per-domain inside so assigning an SO to its prefab is only
 one folder level away, not scattered across separate root folders.
-
-Data variant naming convention: `[EntityName]_[Variant].asset`
-(`Enemy_Basic_Easy`, `Enemy_Basic_Hard`) — so variants of one entity
-naturally cluster together alphabetically.
 
 ---
 
@@ -244,7 +241,5 @@ naturally cluster together alphabetically.
   forgot to register/assign.
 - `enum InitOrder` — centralize `Priority` numbers so they don't collide
   across files.
-- `IPoolable`, `IDamageable` — additional interfaces once there's a
-  concrete combat/pooling need.
-- Folder color/icon coding (`ColorfulFolders` / `Unity-Folder-Icons`) for
-  the `Objects/` and `Scripts/` structure.
+- `IDamageable` — additional interface once there's a concrete combat need.
+  (`IPoolable` already exists in `Utils/Pool/`.)
