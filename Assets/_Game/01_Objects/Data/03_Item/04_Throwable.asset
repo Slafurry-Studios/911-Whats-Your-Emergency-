@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c335957b49f5fd13b553f2761f8f665, type: 3}
-  m_Name: 02_ChargingCable 2
+  m_Name: 04_Throwable
   m_EditorClassIdentifier: 
-  _itemName: Charging Cable
+  _itemName: Throwable
   _icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   _stackable: 0
+  _type: 1
+  _throwEnergy: 1

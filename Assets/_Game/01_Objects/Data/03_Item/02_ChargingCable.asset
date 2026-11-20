@@ -15,3 +15,4 @@ MonoBehaviour:
   _itemName: Charging Cable
   _icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   _stackable: 0
+  _type: 2

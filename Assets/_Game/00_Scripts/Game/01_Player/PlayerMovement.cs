@@ -9,6 +9,8 @@ public class PlayerMovement : MonoBehaviour
     private bool _subscribed;
     private bool _isSprinting;
 
+    public Vector2 MoveDirection => _moveInput;
+
     private void Update()
     {
         if (!_subscribed && InputHub.Instance != null)
