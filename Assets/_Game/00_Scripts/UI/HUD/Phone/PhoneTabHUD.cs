@@ -7,23 +7,25 @@ namespace Slafurry.UI.HUD.Phone
 {
     public class PhoneTabHUD : MonoBehaviour
     {
-        [SerializeField] private TMP_Text _signalText;
+        [SerializeField] private ItemData _phoneData;
         [SerializeField] private TMP_Text _batteryText;
         [SerializeField] private Slider _volumeSlider;
         [SerializeField] private Button _callButton;
         [SerializeField] private TMP_Text _callLabel;
+        [SerializeField] private Toggle _checkbox;
 
         [Header("Tab Slide")]
         [SerializeField] private float _hiddenOffsetY = -400f;
         [SerializeField] private float _slideSpeed = 1000f;
 
-        private bool _signalSubscribed;
         private bool _batterySubscribed;
         private bool _volumeSubscribed;
         private bool _callSubscribed;
+        private bool _checkboxSubscribed;
         private bool _tabSubscribed;
         private bool _syncingVolume;
         private bool _isOpen = true;
+        private bool _hasPhone;
 
         private RectTransform _rect;
         private Vector2 _shownPos;
@@ -38,15 +40,65 @@ namespace Slafurry.UI.HUD.Phone
 
             if (_callButton != null)
                 _callButton.onClick.AddListener(OnCallPressed);
+
+            if (_checkbox != null)
+                _checkbox.onValueChanged.AddListener(OnCheckboxChanged);
+
+            if (PlayerInventory.Instance != null)
+                PlayerInventory.Instance.OnInventoryChanged += OnInventoryChanged;
+        }
+
+        private void OnInventoryChanged()
+        {
+            _hasPhone = _phoneData != null && PlayerInventory.Instance != null &&
+                        PlayerInventory.Instance.HasItem(_phoneData);
+            if (!_hasPhone)
+            {
+                _isOpen = false;
+                UnsubscribeAll();
+            }
+        }
+
+        private void UnsubscribeAll()
+        {
+            if (_batterySubscribed && PhoneBattery.Instance != null)
+                PhoneBattery.Instance.OnChanged -= OnBatteryChanged;
+            _batterySubscribed = false;
+
+            if (_volumeSubscribed && PhoneVolume.Instance != null)
+                PhoneVolume.Instance.OnChanged -= OnVolumeChanged;
+            _volumeSubscribed = false;
+
+            if (_callSubscribed && PhoneCall.Instance != null)
+                PhoneCall.Instance.OnCallChanged -= OnCallChanged;
+            _callSubscribed = false;
+
+            if (_tabSubscribed)
+            {
+                Controls.OnTabPressed -= OnTabPressed;
+                _tabSubscribed = false;
+            }
         }
 
         private void Update()
         {
-            if (!_signalSubscribed && PhoneSignal.Instance != null)
+            if (PlayerInventory.Instance == null) return;
+
+            bool hasPhone = _phoneData != null && PlayerInventory.Instance.HasItem(_phoneData);
+            if (hasPhone != _hasPhone)
             {
-                PhoneSignal.Instance.OnChanged += OnSignalChanged;
-                OnSignalChanged(PhoneSignal.Instance.Level);
-                _signalSubscribed = true;
+                _hasPhone = hasPhone;
+                if (!_hasPhone)
+                {
+                    _isOpen = false;
+                    UnsubscribeAll();
+                }
+            }
+
+            if (!_hasPhone)
+            {
+                Slide();
+                return;
             }
 
             if (!_batterySubscribed && PhoneBattery.Instance != null)
@@ -68,6 +120,11 @@ namespace Slafurry.UI.HUD.Phone
                 PhoneCall.Instance.OnCallChanged += OnCallChanged;
                 OnCallChanged(PhoneCall.Instance.IsOnCall);
                 _callSubscribed = true;
+            }
+
+            if (!_checkboxSubscribed && _checkbox != null)
+            {
+                _checkboxSubscribed = true;
             }
 
             if (!_tabSubscribed && InputHub.Instance != null)
@@ -94,12 +151,6 @@ namespace Slafurry.UI.HUD.Phone
             if (!Controls.IsInputEnabled) return;
 
             _isOpen = !_isOpen;
-        }
-
-        private void OnSignalChanged(int level)
-        {
-            if (_signalText != null)
-                _signalText.text = $"{level}/{PhoneSignal.Instance.MaxLevel}";
         }
 
         private void OnBatteryChanged(float percent)
@@ -138,16 +189,26 @@ namespace Slafurry.UI.HUD.Phone
                 _callLabel.text = isOnCall ? "End" : "Call";
         }
 
+        private void OnCheckboxChanged(bool isOn)
+        {
+            // Placeholder — wire up checkbox behaviour here when needed.
+        }
+
         private void OnDestroy()
         {
+            if (PlayerInventory.Instance != null)
+                PlayerInventory.Instance.OnInventoryChanged -= OnInventoryChanged;
+
+            UnsubscribeAll();
+
             if (_volumeSlider != null)
                 _volumeSlider.onValueChanged.RemoveListener(OnVolumeSliderChanged);
 
             if (_callButton != null)
                 _callButton.onClick.RemoveListener(OnCallPressed);
 
-            if (_signalSubscribed && PhoneSignal.Instance != null)
-                PhoneSignal.Instance.OnChanged -= OnSignalChanged;
+            if (_checkbox != null)
+                _checkbox.onValueChanged.RemoveListener(OnCheckboxChanged);
 
             if (_batterySubscribed && PhoneBattery.Instance != null)
                 PhoneBattery.Instance.OnChanged -= OnBatteryChanged;

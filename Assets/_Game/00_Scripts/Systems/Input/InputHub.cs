@@ -147,6 +147,54 @@ namespace Slafurry.Systems.InputHub
             }
         }
 
+        public static event Action OnSlot1Pressed
+        {
+            add
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnSlot1Pressed += value;
+            }
+            remove
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnSlot1Pressed -= value;
+            }
+        }
+
+        public static event Action OnSlot2Pressed
+        {
+            add
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnSlot2Pressed += value;
+            }
+            remove
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnSlot2Pressed -= value;
+            }
+        }
+
+        public static event Action OnSlot3Pressed
+        {
+            add
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnSlot3Pressed += value;
+            }
+            remove
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnSlot3Pressed -= value;
+            }
+        }
+
+        public static event Action OnThrowPressed
+        {
+            add
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnThrowPressed += value;
+            }
+            remove
+            {
+                if (InputHub.Instance != null) InputHub.Instance.OnThrowPressed -= value;
+            }
+        }
+
         public static bool IsInputEnabled => InputHub.Instance != null && InputHub.Instance.IsInputEnabled;
 
         public static void EnableInput()
@@ -180,6 +228,10 @@ namespace Slafurry.Systems.InputHub
         public event Action OnVolIncPressed;
         public event Action OnVolDecPressed;
         public event Action OnTabPressed;
+        public event Action OnSlot1Pressed;
+        public event Action OnSlot2Pressed;
+        public event Action OnSlot3Pressed;
+        public event Action OnThrowPressed;
 
         private InputAction _jumpAction;
         private InputAction _moveAction;
@@ -190,6 +242,10 @@ namespace Slafurry.Systems.InputHub
         private InputAction _volIncAction;
         private InputAction _volDecAction;
         private InputAction _tabAction;
+        private InputAction _slot1Action;
+        private InputAction _slot2Action;
+        private InputAction _slot3Action;
+        private InputAction _throwAction;
         private InputActionMap _gameplayMap;
 
         public bool IsInputEnabled { get; private set; } = true;
@@ -237,6 +293,20 @@ namespace Slafurry.Systems.InputHub
                 _volDecAction.performed += ctx => OnVolDecPressed?.Invoke();
             if (_tabAction != null)
                 _tabAction.performed += ctx => OnTabPressed?.Invoke();
+
+            _slot1Action = _gameplayMap.FindAction("Slot_1");
+            _slot2Action = _gameplayMap.FindAction("Slot_2");
+            _slot3Action = _gameplayMap.FindAction("Slot_3");
+            _throwAction = _gameplayMap.FindAction("Throw");
+
+            if (_slot1Action != null)
+                _slot1Action.performed += ctx => OnSlot1Pressed?.Invoke();
+            if (_slot2Action != null)
+                _slot2Action.performed += ctx => OnSlot2Pressed?.Invoke();
+            if (_slot3Action != null)
+                _slot3Action.performed += ctx => OnSlot3Pressed?.Invoke();
+            if (_throwAction != null)
+                _throwAction.performed += ctx => OnThrowPressed?.Invoke();
 
             _gameplayMap.Enable();
             IsInputEnabled = true;

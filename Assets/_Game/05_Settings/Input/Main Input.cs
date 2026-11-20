@@ -172,6 +172,42 @@ public partial class @MainInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slot_1"",
+                    ""type"": ""Button"",
+                    ""id"": ""47dc30fe-4d07-443a-8f6b-6453d0297621"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slot_2"",
+                    ""type"": ""Button"",
+                    ""id"": ""f501db40-19ab-4b61-befb-431815a07b99"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slot_3"",
+                    ""type"": ""Button"",
+                    ""id"": ""15d51557-c7df-45f7-ac0f-8f7f6b6b3789"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Throw"",
+                    ""type"": ""Button"",
+                    ""id"": ""b9b9cc68-b8b6-4951-874c-94f0adde8a9b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -350,6 +386,50 @@ public partial class @MainInput: IInputActionCollection2, IDisposable
                     ""action"": ""Tab"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a6ae75ac-0f91-474a-b624-cda6a38161bb"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Slot_1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fdffe6ad-a78b-4817-8058-540ad88e8132"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Slot_2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""91c29567-a881-44c5-a4d8-cf183702a26e"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Slot_3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4e4311c2-957e-4e85-9dc0-f4a090bdfab6"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -367,6 +447,10 @@ public partial class @MainInput: IInputActionCollection2, IDisposable
         m_Gameplay_VolDec = m_Gameplay.FindAction("VolDec", throwIfNotFound: true);
         m_Gameplay_VolInc = m_Gameplay.FindAction("VolInc", throwIfNotFound: true);
         m_Gameplay_Tab = m_Gameplay.FindAction("Tab", throwIfNotFound: true);
+        m_Gameplay_Slot_1 = m_Gameplay.FindAction("Slot_1", throwIfNotFound: true);
+        m_Gameplay_Slot_2 = m_Gameplay.FindAction("Slot_2", throwIfNotFound: true);
+        m_Gameplay_Slot_3 = m_Gameplay.FindAction("Slot_3", throwIfNotFound: true);
+        m_Gameplay_Throw = m_Gameplay.FindAction("Throw", throwIfNotFound: true);
     }
 
     ~@MainInput()
@@ -456,6 +540,10 @@ public partial class @MainInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_VolDec;
     private readonly InputAction m_Gameplay_VolInc;
     private readonly InputAction m_Gameplay_Tab;
+    private readonly InputAction m_Gameplay_Slot_1;
+    private readonly InputAction m_Gameplay_Slot_2;
+    private readonly InputAction m_Gameplay_Slot_3;
+    private readonly InputAction m_Gameplay_Throw;
     /// <summary>
     /// Provides access to input actions defined in input action map "Gameplay".
     /// </summary>
@@ -503,6 +591,22 @@ public partial class @MainInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Gameplay/Tab".
         /// </summary>
         public InputAction @Tab => m_Wrapper.m_Gameplay_Tab;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/Slot_1".
+        /// </summary>
+        public InputAction @Slot_1 => m_Wrapper.m_Gameplay_Slot_1;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/Slot_2".
+        /// </summary>
+        public InputAction @Slot_2 => m_Wrapper.m_Gameplay_Slot_2;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/Slot_3".
+        /// </summary>
+        public InputAction @Slot_3 => m_Wrapper.m_Gameplay_Slot_3;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/Throw".
+        /// </summary>
+        public InputAction @Throw => m_Wrapper.m_Gameplay_Throw;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -556,6 +660,18 @@ public partial class @MainInput: IInputActionCollection2, IDisposable
             @Tab.started += instance.OnTab;
             @Tab.performed += instance.OnTab;
             @Tab.canceled += instance.OnTab;
+            @Slot_1.started += instance.OnSlot_1;
+            @Slot_1.performed += instance.OnSlot_1;
+            @Slot_1.canceled += instance.OnSlot_1;
+            @Slot_2.started += instance.OnSlot_2;
+            @Slot_2.performed += instance.OnSlot_2;
+            @Slot_2.canceled += instance.OnSlot_2;
+            @Slot_3.started += instance.OnSlot_3;
+            @Slot_3.performed += instance.OnSlot_3;
+            @Slot_3.canceled += instance.OnSlot_3;
+            @Throw.started += instance.OnThrow;
+            @Throw.performed += instance.OnThrow;
+            @Throw.canceled += instance.OnThrow;
         }
 
         /// <summary>
@@ -594,6 +710,18 @@ public partial class @MainInput: IInputActionCollection2, IDisposable
             @Tab.started -= instance.OnTab;
             @Tab.performed -= instance.OnTab;
             @Tab.canceled -= instance.OnTab;
+            @Slot_1.started -= instance.OnSlot_1;
+            @Slot_1.performed -= instance.OnSlot_1;
+            @Slot_1.canceled -= instance.OnSlot_1;
+            @Slot_2.started -= instance.OnSlot_2;
+            @Slot_2.performed -= instance.OnSlot_2;
+            @Slot_2.canceled -= instance.OnSlot_2;
+            @Slot_3.started -= instance.OnSlot_3;
+            @Slot_3.performed -= instance.OnSlot_3;
+            @Slot_3.canceled -= instance.OnSlot_3;
+            @Throw.started -= instance.OnThrow;
+            @Throw.performed -= instance.OnThrow;
+            @Throw.canceled -= instance.OnThrow;
         }
 
         /// <summary>
@@ -697,5 +825,33 @@ public partial class @MainInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnTab(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Slot_1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSlot_1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Slot_2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSlot_2(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Slot_3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSlot_3(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Throw" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnThrow(InputAction.CallbackContext context);
     }
 }
