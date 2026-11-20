@@ -10,9 +10,11 @@ namespace Slafurry.UI.HUD.Phone
     {
         [SerializeField] private GameObject _panel;
         [SerializeField] private TMP_Text _batteryText;
+        [SerializeField] private Slider _batterySlider; // display-only battery bar (0-100)
         [SerializeField] private TMP_Text _ampereText;
         [SerializeField] private UIDragHandler _cable;
         [SerializeField] private RectTransform _inputSlot;
+        [SerializeField] private RectTransform _dragParent; // parent to keep cable under while dragged
         [SerializeField] private Button _closeButton;
 
         [Header("Cable Facing")]
@@ -26,7 +28,6 @@ namespace Slafurry.UI.HUD.Phone
         private Quaternion _homeRot;
         private Transform _homeParent;
         private Canvas _canvas;
-
         private void Awake()
         {
             _cableRect = (RectTransform)_cable.transform;
@@ -36,6 +37,7 @@ namespace Slafurry.UI.HUD.Phone
             _canvas = GetComponentInParent<Canvas>();
 
             _cable.onDragEnded.AddListener(OnDragEnded);
+            _cable.onDragStarted.AddListener(OnDragStarted);
 
             if (_closeButton != null)
                 _closeButton.onClick.AddListener(Close);
@@ -105,8 +107,20 @@ namespace Slafurry.UI.HUD.Phone
             }
             else
             {
-                RestoreCable();
+                PlaceAtBottom();
             }
+        }
+
+        /// <summary>Keep cable behind other UI while being dragged, under its set parent.</summary>
+        private void OnDragStarted()
+        {
+            if (_cableRect == null) return;
+
+            var parent = _dragParent != null ? _dragParent : _canvas?.transform;
+            if (parent == null) return;
+
+            _cableRect.SetParent(parent, worldPositionStays: true);
+            _cableRect.SetSiblingIndex(0);
         }
 
         private void FaceInput()
@@ -118,6 +132,7 @@ namespace Slafurry.UI.HUD.Phone
             if (toSlot.sqrMagnitude < 0.0001f) return;
 
             float angle = Mathf.Atan2(toSlot.y, toSlot.x) * Mathf.Rad2Deg + _facingOffsetDegrees;
+            angle = Mathf.Clamp(angle, -50f, 50f);
             _cableRect.rotation = Quaternion.Euler(0f, 0f, angle);
         }
 
@@ -154,6 +169,21 @@ namespace Slafurry.UI.HUD.Phone
             _cableRect.position = _inputSlot.position;
         }
 
+        /// <summary>Place cable at bottom layer when released without snapping.</summary>
+        private void PlaceAtBottom()
+        {
+            if (_cableRect == null || _canvas == null) return;
+
+            var canvasRect = _canvas.GetComponent<RectTransform>();
+            if (canvasRect == null) return;
+
+            _cableRect.SetParent(canvasRect, false);
+            float bottomY = -canvasRect.rect.height * 0.5f + _cableRect.rect.height * 0.5f;
+            _cableRect.anchoredPosition = new Vector2(0f, bottomY);
+            _cableRect.localRotation = Quaternion.identity;
+            _cableRect.SetSiblingIndex(0);
+        }
+
         private void RestoreCable()
         {
             _cableRect.SetParent(_homeParent, false);
@@ -174,6 +204,9 @@ namespace Slafurry.UI.HUD.Phone
         {
             if (_batteryText != null)
                 _batteryText.text = $"{percent:F0}%";
+
+            if (_batterySlider != null)
+                _batterySlider.value = Mathf.Clamp01(percent / 100f);
         }
 
         private void OnDrawGizmos()
@@ -221,7 +254,10 @@ namespace Slafurry.UI.HUD.Phone
         private void OnDestroy()
         {
             if (_cable != null)
+            {
                 _cable.onDragEnded.RemoveListener(OnDragEnded);
+                _cable.onDragStarted.RemoveListener(OnDragStarted);
+            }
 
             if (_closeButton != null)
                 _closeButton.onClick.RemoveListener(Close);
