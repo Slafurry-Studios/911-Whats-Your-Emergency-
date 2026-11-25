@@ -5,11 +5,28 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private PlayerStatsData _data;
 
+    // Gap kept between the player collider and walls so casts don't start overlapping.
+    private const float Skin = 0.01f;
+
     private Vector2 _moveInput;
+    private Vector2 _velocity;
     private bool _subscribed;
     private bool _isSprinting;
 
+    private Rigidbody2D _rb;
+    private ContactFilter2D _filter;
+    private readonly RaycastHit2D[] _hits = new RaycastHit2D[8];
+
     public Vector2 MoveDirection => _moveInput;
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+        if (_rb != null) _rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+        _filter = new ContactFilter2D { useTriggers = false };
+        _filter.SetLayerMask(Physics2D.GetLayerCollisionMask(gameObject.layer));
+    }
 
     private void Update()
     {
@@ -21,6 +38,7 @@ public class PlayerMovement : MonoBehaviour
             _subscribed = true;
         }
 
+        _velocity = Vector2.zero;
         if (!_subscribed || !Controls.IsInputEnabled) return;
 
         float speed = _data.MoveSpeed;
@@ -39,8 +57,35 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        Vector3 move = new Vector3(_moveInput.x, _moveInput.y, 0f);
-        transform.position += move * (speed * Time.deltaTime);
+        _velocity = _moveInput * speed;
+
+        // No Rigidbody2D: old behaviour (no collision).
+        if (_rb == null)
+            transform.position += (Vector3)(_velocity * Time.deltaTime);
+    }
+
+    private void FixedUpdate()
+    {
+        if (_rb == null || _velocity == Vector2.zero) return;
+
+        // Kinematic body: cast each axis separately so the player slides along walls.
+        Vector2 delta = _velocity * Time.fixedDeltaTime;
+        Vector2 step = AllowedMove(new Vector2(delta.x, 0f)) + AllowedMove(new Vector2(0f, delta.y));
+        if (step != Vector2.zero)
+            _rb.MovePosition(_rb.position + step);
+    }
+
+    private Vector2 AllowedMove(Vector2 delta)
+    {
+        float distance = delta.magnitude;
+        if (distance <= 0f) return Vector2.zero;
+
+        Vector2 dir = delta / distance;
+        int count = _rb.Cast(dir, _filter, _hits, distance + Skin);
+        for (int i = 0; i < count; i++)
+            distance = Mathf.Min(distance, _hits[i].distance - Skin);
+
+        return dir * Mathf.Max(0f, distance);
     }
 
     private void OnMoveChanged(Vector2 input) => _moveInput = input;
