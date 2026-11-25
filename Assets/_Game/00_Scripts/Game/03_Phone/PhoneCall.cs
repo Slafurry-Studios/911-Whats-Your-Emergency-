@@ -8,6 +8,9 @@ public class PhoneCall : MonoBehaviour
 
     public event System.Action<bool> OnCallChanged;
 
+    /// <summary>A call can only be placed with battery left.</summary>
+    public bool CanCall => PhoneBattery.Instance == null || PhoneBattery.Instance.Percent > 0f;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -21,6 +24,7 @@ public class PhoneCall : MonoBehaviour
     public void Call()
     {
         if (IsOnCall) return;
+        if (!CanCall) return;
 
         IsOnCall = true;
         OnCallChanged?.Invoke(true);

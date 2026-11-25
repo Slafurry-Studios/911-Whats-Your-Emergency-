@@ -11,6 +11,10 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private List<ItemData> _otherItems = new();
     [SerializeField] private List<ItemData> _essentialItems = new();
 
+    // Parallel to _otherItems: the world object picked up for each slot (null if none), so the
+    // hotbar shows the same sprite as on the floor and that exact object is what gets thrown.
+    private readonly List<InteractItem> _otherWorld = new();
+
     private int _selectedSlot = -1; // -1 = none, 0..MaxOtherItems-1
 
     public event System.Action<ItemData> OnItemAdded;
@@ -34,6 +38,9 @@ public class PlayerInventory : MonoBehaviour
             return;
         }
         Instance = this;
+
+        // Items preset in the Inspector have no world object.
+        while (_otherWorld.Count < _otherItems.Count) _otherWorld.Add(null);
     }
 
     public bool HasItem(ItemData item) => item != null && (_otherItems.Contains(item) || _essentialItems.Contains(item));
@@ -49,7 +56,9 @@ public class PlayerInventory : MonoBehaviour
         return count;
     }
 
-    public bool AddItem(ItemData item)
+    public bool AddItem(ItemData item) => AddItem(item, null);
+
+    public bool AddItem(ItemData item, InteractItem source)
     {
         if (item == null) return false;
 
@@ -62,6 +71,7 @@ public class PlayerInventory : MonoBehaviour
         {
             if (_otherItems.Count >= MaxOtherItems) return false;
             _otherItems.Add(item);
+            _otherWorld.Add(source);
         }
 
         OnInventoryChanged?.Invoke();
@@ -73,8 +83,38 @@ public class PlayerInventory : MonoBehaviour
     {
         if (item == null) return false;
 
-        bool removed = item.Type == ItemType.Essential ? _essentialItems.Remove(item) : _otherItems.Remove(item);
-        if (!removed) return false;
+        if (item.Type != ItemType.Essential)
+        {
+            int index = _otherItems.IndexOf(item);
+            return index >= 0 && RemoveSlot(index);
+        }
+
+        if (!_essentialItems.Remove(item)) return false;
+        OnInventoryChanged?.Invoke();
+        OnItemRemoved?.Invoke(item);
+        return true;
+    }
+
+    /// <summary>World object picked up into this slot (null if it was given another way).</summary>
+    public InteractItem GetSlotWorldItem(int slot) =>
+        slot >= 0 && slot < _otherWorld.Count ? _otherWorld[slot] : null;
+
+    /// <summary>Hotbar icon: the picked object's floor sprite, else the item's icon.</summary>
+    public Sprite GetSlotIcon(int slot)
+    {
+        if (slot < 0 || slot >= _otherItems.Count) return null;
+        var world = GetSlotWorldItem(slot);
+        var sr = world != null ? world.GetComponent<SpriteRenderer>() : null;
+        if (sr != null && sr.sprite != null) return sr.sprite;
+        return _otherItems[slot].Icon;
+    }
+
+    public bool RemoveSlot(int slot)
+    {
+        if (slot < 0 || slot >= _otherItems.Count) return false;
+        var item = _otherItems[slot];
+        _otherItems.RemoveAt(slot);
+        if (slot < _otherWorld.Count) _otherWorld.RemoveAt(slot);
 
         if (item.Type != ItemType.Essential)
         {
@@ -101,6 +141,7 @@ public class PlayerInventory : MonoBehaviour
     public void Clear()
     {
         _otherItems.Clear();
+        _otherWorld.Clear();
         _essentialItems.Clear();
         _selectedSlot = -1;
         OnInventoryChanged?.Invoke();

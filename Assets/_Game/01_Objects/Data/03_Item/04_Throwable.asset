@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 04_Throwable
   m_EditorClassIdentifier: 
   _itemName: Throwable
-  _icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  _icon: {fileID: -557236533, guid: 3294091c7aa88bd1d992138dd2a20ab9, type: 3}
   _stackable: 0
   _type: 1
   _throwEnergy: 1

@@ -83,7 +83,12 @@ public class PlayerMovement : MonoBehaviour
         Vector2 dir = delta / distance;
         int count = _rb.Cast(dir, _filter, _hits, distance + Skin);
         for (int i = 0; i < count; i++)
+        {
+            // Already overlapping at the start (spawned touching a prop): don't let that lock
+            // movement in every direction — only real hits ahead count.
+            if (_hits[i].distance <= 0f) continue;
             distance = Mathf.Min(distance, _hits[i].distance - Skin);
+        }
 
         return dir * Mathf.Max(0f, distance);
     }

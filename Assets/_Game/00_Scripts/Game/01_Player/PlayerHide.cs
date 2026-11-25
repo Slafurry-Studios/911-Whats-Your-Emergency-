@@ -5,6 +5,7 @@ public class PlayerHide : MonoBehaviour
     public static PlayerHide Instance { get; private set; }
 
     public bool IsHidden { get; private set; }
+    public HideArea CurrentArea { get; private set; }
 
     public event System.Action<bool> OnHideStateChanged;
 
@@ -29,11 +30,14 @@ public class PlayerHide : MonoBehaviour
             _originalColor = _playerSprite.color;
     }
 
-    public void SetHidden(bool hidden)
+    public void SetHidden(bool hidden) => SetHidden(hidden, null);
+
+    public void SetHidden(bool hidden, HideArea area)
     {
         if (IsHidden == hidden) return;
 
         IsHidden = hidden;
+        CurrentArea = hidden ? area : null;
 
         if (_movement != null)
             _movement.enabled = !hidden;

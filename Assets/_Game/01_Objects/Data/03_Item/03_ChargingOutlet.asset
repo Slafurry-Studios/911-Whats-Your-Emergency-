@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: 03_ChargingOutlet
   m_EditorClassIdentifier: 
   _itemName: Charging Outlet
-  _icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  _icon: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9, type: 3}
   _stackable: 0
+  _type: 0
+  _throwEnergy: 1

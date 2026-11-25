@@ -16,6 +16,8 @@ public class Door : BaseTrigger, IInteractable
 
     public string InteractionPrompt => _isOpen ? _promptOpen : _promptClosed;
 
+    public bool IsOpen => _isOpen;
+
     public bool CanInteract => CanTrigger();
 
     private void Awake()
@@ -32,6 +34,14 @@ public class Door : BaseTrigger, IInteractable
         _isOpen = !_isOpen;
         ApplyState();
         AddTriggerCount();
+    }
+
+    /// <summary>Opens the door regardless of the trigger limit (the kidnapper forcing it).</summary>
+    public void ForceOpen()
+    {
+        if (_isOpen) return;
+        _isOpen = true;
+        ApplyState();
     }
 
     private void ApplyState()

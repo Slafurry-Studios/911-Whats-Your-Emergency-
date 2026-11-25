@@ -70,6 +70,11 @@ public class PlayerInteract : BaseTrigger
     {
         if (!Controls.IsInputEnabled) return;
         if (!CanTrigger()) return;
+        // Left click is also Interact: ignore clicks on the HUD (e.g. dragging a hotbar slot).
+        var mouse = UnityEngine.InputSystem.Mouse.current;
+        if (mouse != null && mouse.leftButton.wasPressedThisFrame &&
+            UnityEngine.EventSystems.EventSystem.current != null &&
+            UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
         if (CurrentTarget == null || !CurrentTarget.CanInteract) return;
 
         CurrentTarget.Interact();

@@ -1,25 +1,26 @@
 using UnityEngine;
 
 /// <summary>
-/// Tracks how close the police are (Progress 0..1). Progress only advances while the
-/// player is on a 911 call, scaled by phone signal. It is kept after hanging up
-/// (police already dispatched). Fires OnArrived once at 1.
+/// How close the police are (Progress 0..1). Starts advancing once the 911 call has been
+/// placed and never stops after that (hanging up doesn't matter). While the phone battery
+/// is empty it keeps advancing, only slower. Fires OnArrived once at 1 (the win).
+/// Progress is also the kidnapper's aggression.
 /// </summary>
 public class PoliceArrival : MonoBehaviour
 {
-    [Tooltip("Seconds of calling at full signal until the police arrive.")]
+    [Tooltip("Seconds from the call until the police arrive, with a charged battery.")]
     [SerializeField] private float _secondsToArrive = 180f;
-    [Tooltip("Only advance while PhoneCall.IsOnCall.")]
-    [SerializeField] private bool _requireCall = true;
-    [Tooltip("Multiply speed by signal level / max signal (no signal = no progress).")]
-    [SerializeField] private bool _scaleBySignal = true;
+    [Tooltip("Speed multiplier while the phone battery is empty.")]
+    [SerializeField, Range(0f, 1f)] private float _deadBatteryMultiplier = 0.5f;
 
     public static PoliceArrival Instance { get; private set; }
 
     public float Progress { get; private set; }
+    public bool CallStarted { get; private set; }
     public bool HasArrived { get; private set; }
 
     public event System.Action<float> OnChanged;
+    public event System.Action OnCallStarted;
     public event System.Action OnArrived;
 
     private void Awake()
@@ -36,15 +37,18 @@ public class PoliceArrival : MonoBehaviour
 
     private void Update()
     {
+        if (!CallStarted)
+        {
+            if (PhoneCall.Instance == null || !PhoneCall.Instance.IsOnCall) return;
+            CallStarted = true;
+            OnCallStarted?.Invoke();
+        }
+
         if (HasArrived || _secondsToArrive <= 0f) return;
-        if (_requireCall && (PhoneCall.Instance == null || !PhoneCall.Instance.IsOnCall)) return;
 
         float rate = 1f / _secondsToArrive;
-        if (_scaleBySignal && PhoneSignal.Instance != null)
-            rate *= PhoneSignal.Instance.MaxLevel > 0
-                ? (float)PhoneSignal.Instance.Level / PhoneSignal.Instance.MaxLevel
-                : 0f;
-        if (rate <= 0f) return;
+        if (PhoneBattery.Instance != null && PhoneBattery.Instance.Percent <= 0f)
+            rate *= _deadBatteryMultiplier;
 
         SetProgress(Progress + rate * Time.deltaTime);
     }
@@ -52,7 +56,7 @@ public class PoliceArrival : MonoBehaviour
     public void SetProgress(float value)
     {
         float clamped = Mathf.Clamp01(value);
-        if (Mathf.Approximately(clamped, Progress)) return;
+        if (Mathf.Approximately(clamped, Progress) && clamped < 1f) return;
 
         Progress = clamped;
         OnChanged?.Invoke(Progress);

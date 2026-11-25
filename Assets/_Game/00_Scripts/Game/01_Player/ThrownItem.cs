@@ -1,3 +1,4 @@
+using Slafurry.Core.Interface;
 using UnityEngine;
 
 /// <summary>
@@ -12,6 +13,13 @@ public class ThrownItem : MonoBehaviour
     private bool _thrown;
 
     private static Sprite _placeholder;
+
+    /// <summary>Linear drag on thrown items: launched at distance * Drag they stop about at the target.</summary>
+    public const float Drag = 3f;
+
+    // Noise made where the item lands (lures the kidnapper). Hitting him makes a smaller one.
+    private const float LandNoiseRadius = 14f;
+    private const float LandNoiseIntensity = 1f;
 
     /// <summary>Throw an existing world item — reuses its GameObject.</summary>
     public static ThrownItem Throw(InteractItem worldItem, Vector2 position, Vector2 dir, float speed, GameObject thrower)
@@ -37,7 +45,7 @@ public class ThrownItem : MonoBehaviour
         ti._rb.gravityScale = 0f;
         ti._rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         ti._rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-        ti._rb.drag = 0.7f; // decays → comes to rest on its own
+        ti._rb.drag = Drag; // decays → comes to rest on its own
         ti._rb.velocity = dir.normalized * speed;
 
         // never collide with the thrower in flight
@@ -67,7 +75,7 @@ public class ThrownItem : MonoBehaviour
         ti._rb.gravityScale = 0f;
         ti._rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         ti._rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-        ti._rb.drag = 0.7f;
+        ti._rb.drag = Drag;
         ti._rb.velocity = dir.normalized * speed;
         ti._thrown = true;
 
@@ -88,6 +96,17 @@ public class ThrownItem : MonoBehaviour
     private void HandleContact(Collider2D other)
     {
         if (!_thrown) return;
+
+        // Hitting the kidnapper (his body is a trigger) slows him; the item drops right there.
+        var hittable = other.GetComponentInParent<IThrowHittable>();
+        if (hittable != null)
+        {
+            Vector2 dir = _rb != null && _rb.velocity.sqrMagnitude > 0.001f ? _rb.velocity.normalized : Vector2.zero;
+            hittable.OnHitByThrow(transform.position, dir);
+            Stop();
+            return;
+        }
+
         if (other.isTrigger) return; // trigger zones don't stop it
         if (other.GetComponentInParent<PlayerThrow>() != null) return; // ignore thrower
         Stop();
@@ -101,6 +120,8 @@ public class ThrownItem : MonoBehaviour
             _rb.bodyType = RigidbodyType2D.Static;
         }
         _thrown = false;
+
+        SoundWave.EmitAt(transform.position, LandNoiseRadius, LandNoiseIntensity);
 
         var worldItem = GetComponent<InteractItem>();
         if (worldItem != null) worldItem.OnLanded();
