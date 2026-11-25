@@ -41490,6 +41490,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -41776,6 +41781,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Pot
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -41900,6 +41910,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Pot
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -42026,6 +42041,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -42151,6 +42171,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -42249,7 +42274,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -565178977, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: 1553548469, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 558104561797080001, guid: 398c756e575fc73619dccc2d5c4f6891,
         type: 3}
@@ -42489,7 +42514,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: -1986610788, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 6359967076501033665, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -42500,6 +42525,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -42718,7 +42748,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: -1986610788, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 6359967076501033665, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -42729,6 +42759,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -42854,6 +42889,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Pot
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -43302,6 +43342,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -43400,7 +43445,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -565178977, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: 1553548469, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 558104561797080001, guid: 398c756e575fc73619dccc2d5c4f6891,
         type: 3}
@@ -43652,6 +43697,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Pot
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -43777,6 +43827,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Pot
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -43901,6 +43956,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Pot
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -44176,7 +44236,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: -1986610788, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 6359967076501033665, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -44187,6 +44247,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -44313,6 +44378,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -44426,7 +44496,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: -1986610788, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 6359967076501033665, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -44437,6 +44507,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -44563,6 +44638,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Pot
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -44687,6 +44767,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -44974,6 +45059,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Pot
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -45087,7 +45177,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: -1986610788, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 6359967076501033665, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -45098,6 +45188,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -45477,7 +45572,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: -1986610788, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 6359967076501033665, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -45488,6 +45583,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -45718,6 +45818,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -45843,6 +45948,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -45956,7 +46066,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: -1986610788, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 6359967076501033665, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -45967,6 +46077,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -46081,7 +46196,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: -1986610788, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 6359967076501033665, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -46092,6 +46207,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -46206,7 +46326,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: -1986610788, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 6359967076501033665, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -46217,6 +46337,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -46447,6 +46572,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Pot
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -46571,6 +46701,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Pot
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -46801,6 +46936,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -46926,6 +47066,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -47024,7 +47169,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -565178977, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: 1553548469, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 558104561797080001, guid: 398c756e575fc73619dccc2d5c4f6891,
         type: 3}
@@ -47264,7 +47409,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: -1986610788, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 6359967076501033665, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -47275,6 +47420,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -47374,7 +47524,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -565178977, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: 1553548469, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 558104561797080001, guid: 398c756e575fc73619dccc2d5c4f6891,
         type: 3}
@@ -47631,6 +47781,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Pot
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -47756,6 +47911,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Pot
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -47854,7 +48014,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -565178977, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: 1553548469, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 558104561797080001, guid: 398c756e575fc73619dccc2d5c4f6891,
         type: 3}
@@ -48371,6 +48531,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -48645,7 +48810,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: -1986610788, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 6359967076501033665, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -48656,6 +48821,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -48781,6 +48951,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Pot
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -49068,6 +49243,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -49193,6 +49373,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -49306,7 +49491,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: -1986610788, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 6359967076501033665, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -49317,6 +49502,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -49416,7 +49606,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -565178977, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: 1553548469, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 558104561797080001, guid: 398c756e575fc73619dccc2d5c4f6891,
         type: 3}
@@ -49656,7 +49846,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: -1986610788, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 6359967076501033665, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -49667,6 +49857,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -49793,6 +49988,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Pot
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -49906,7 +50106,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: -1986610788, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 6359967076501033665, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -49917,6 +50117,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -50031,7 +50236,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1738010663, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: -1986610788, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 6359967076501033665, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -50042,6 +50247,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -50168,6 +50378,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -50292,6 +50507,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -602422333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
       objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
@@ -50418,6 +50638,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Pot
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -50543,6 +50768,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -602422333
       objectReference: {fileID: 0}
+    - target: {fileID: 8737053585325404986, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
+        type: 3}
+      propertyPath: _interactionPrompt
+      value: Take Rock
+      objectReference: {fileID: 0}
     - target: {fileID: 8805538240556880575, guid: ecf9b77aba7db9dc4a03ae82ffd027c2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -50641,7 +50871,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -565178977, guid: 3294091c7aa88bd1d992138dd2a20ab9,
+      objectReference: {fileID: 1553548469, guid: 3294091c7aa88bd1d992138dd2a20ab9,
         type: 3}
     - target: {fileID: 558104561797080001, guid: 398c756e575fc73619dccc2d5c4f6891,
         type: 3}

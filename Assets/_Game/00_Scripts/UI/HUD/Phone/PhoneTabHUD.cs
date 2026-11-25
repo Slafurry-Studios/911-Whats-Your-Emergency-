@@ -157,6 +157,16 @@ namespace Slafurry.UI.HUD.Phone
         {
             if (_batteryText != null)
                 _batteryText.text = $"{percent:F0}%";
+            RefreshCallButton();
+        }
+
+        // The 911 call is one-way: once placed it can't be ended, and it needs battery to start.
+        private void RefreshCallButton()
+        {
+            bool onCall = PhoneCall.Instance != null && PhoneCall.Instance.IsOnCall;
+            bool canCall = PhoneCall.Instance != null && PhoneCall.Instance.CanCall;
+            if (_callButton != null) _callButton.interactable = !onCall && canCall;
+            if (_callLabel != null) _callLabel.text = onCall ? "Calling..." : canCall ? "Call" : "No Battery";
         }
 
         private void OnVolumeChanged(float volume)
@@ -178,16 +188,13 @@ namespace Slafurry.UI.HUD.Phone
 
         private void OnCallPressed()
         {
-            if (PhoneCall.Instance == null) return;
+            if (PhoneCall.Instance == null || PhoneCall.Instance.IsOnCall) return;
 
-            PhoneCall.Instance.ToggleCall();
+            PhoneCall.Instance.Call();
+            RefreshCallButton();
         }
 
-        private void OnCallChanged(bool isOnCall)
-        {
-            if (_callLabel != null)
-                _callLabel.text = isOnCall ? "End" : "Call";
-        }
+        private void OnCallChanged(bool isOnCall) => RefreshCallButton();
 
         private void OnCheckboxChanged(bool isOn)
         {

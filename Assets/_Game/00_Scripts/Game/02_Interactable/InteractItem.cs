@@ -49,7 +49,7 @@ public class InteractItem : MonoBehaviour, IInteractable
         if (_item == null) return;
         if (PlayerInventory.Instance == null) return;
 
-        if (!PlayerInventory.Instance.AddItem(_item)) return; // inventory full for non-essential items
+        if (!PlayerInventory.Instance.AddItem(_item, this)) return; // inventory full for non-essential items
 
         _collected = true;
         gameObject.SetActive(false);

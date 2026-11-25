@@ -7,26 +7,26 @@ using Slafurry.Core.Interface;
 /// <summary>
 /// Scene-bound sound hub (LocalSingleton). Gameplay code calls Emit();
 /// every ISoundListener inside the radius hears it — e.g. kidnapper AI sensor.
+/// EmitAt() is the same thing without needing a SoundWave in the scene.
 /// </summary>
 public class SoundWave : LocalSingleton<SoundWave>
 {
     protected override void OnSingletonAwake() { }
 
     public override IEnumerator Initialize() { yield return null; }
+
     public override void PostInitialize() { }
 
-    /// <summary>Emit sound at a source transform.</summary>
-    /// <param name="source">Sound origin.</param>
-    /// <param name="radius">Hear radius (circle cast).</param>
-    /// <param name="intensity">Base loudness; received intensity falls off linearly to 0 at radius edge.</param>
     public void Emit(Transform source, float radius, float intensity)
     {
         if (source == null) return;
-        Emit(source.position, radius, intensity);
+        EmitAt(source.position, radius, intensity);
     }
 
-    /// <summary>Emit sound at a world position.</summary>
-    public void Emit(Vector2 position, float radius, float intensity)
+    public void Emit(Vector2 position, float radius, float intensity) => EmitAt(position, radius, intensity);
+
+    /// <summary>Notify every ISoundListener within radius (loudness falls off with distance).</summary>
+    public static void EmitAt(Vector2 position, float radius, float intensity)
     {
         if (radius <= 0f || intensity <= 0f) return;
 

@@ -127,15 +127,17 @@ namespace Slafurry.UI.HUD.Inventory
 
         private void Rebuild()
         {
-            var items = PlayerInventory.Instance?.OtherItems;
+            var inv = PlayerInventory.Instance;
 
             for (int i = 0; i < 3; i++)
             {
                 if (_slots[i] == null) continue;
 
-                bool has = items != null && i < items.Count;
-                _slots[i].sprite = has ? items[i].Icon : null;
-                _slots[i].enabled = has;
+                // Same sprite as the object had on the floor.
+                var icon = inv != null ? inv.GetSlotIcon(i) : null;
+                _slots[i].sprite = icon;
+                _slots[i].enabled = icon != null;
+                _slots[i].preserveAspect = true;
             }
         }
     }

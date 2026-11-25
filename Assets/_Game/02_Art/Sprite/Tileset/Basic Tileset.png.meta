@@ -341,7 +341,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icon_Eyes
+      name: Outlet_Broken
       rect:
         serializedVersion: 2
         x: 0
@@ -404,7 +404,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Item_Ball
+      name: Outlet
       rect:
         serializedVersion: 2
         x: 0
@@ -593,7 +593,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Curtain_A
+      name: Curtain_Empty
       rect:
         serializedVersion: 2
         x: 0
@@ -614,7 +614,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Curtain_B
+      name: Curtain_Hidden
       rect:
         serializedVersion: 2
         x: 16
@@ -635,7 +635,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Curtain_Open
+      name: Curtain_Broken
       rect:
         serializedVersion: 2
         x: 32
@@ -666,17 +666,17 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Curtain_A: 1553548469
-      Curtain_B: -565178977
-      Curtain_Open: -1497980231
+      Curtain_Empty: 1553548469
+      Curtain_Hidden: -565178977
+      Curtain_Broken: -1497980231
       Door_Double: -177835005
       Door_Side_A: 647692775
       Door_Side_B: -449919599
       Door_Single_L: -1331156372
       Door_Single_R: -199853347
       Floor_Brick: 1787950799
-      Icon_Eyes: -815277388
-      Item_Ball: -1738010663
+      Outlet_Broken: -815277388
+      Outlet: -1738010663
       Item_Boot: 1490217401
       Item_Plate: -1986610788
       Item_Pot: -2041768103
