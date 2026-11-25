@@ -21,6 +21,8 @@ public class PlayerThrow : MonoBehaviour
     private LineRenderer _aimLine;
     private Vector2 _lastDir = Vector2.right;
     private bool _aiming;
+
+    public bool IsAiming => _aiming;
     private bool _subscribed;
 
     private void Awake()
