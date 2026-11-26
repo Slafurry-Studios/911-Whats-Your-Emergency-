@@ -47,20 +47,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Unity on Linux encodes WebGL audio to AAC by shelling out to ffmpeg.
+      # Without it every AudioClip fails to import and the build ships silent.
+      - name: Install ffmpeg (WebGL audio encoding)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
       - name: Cache Unity Library
         uses: actions/cache@v4
         with:
           path: ${{ env.UNITY_PROJECT_PATH }}/Library
+          # v2: older caches hold failed (silent) audio imports from builds without ffmpeg.
           key: >-
-            Library-ubuntu-latest-WebGL-
+            Library-v2-ubuntu-latest-WebGL-
             ${{ hashFiles(
               format('{0}/Assets/**', env.UNITY_PROJECT_PATH),
               format('{0}/Packages/**', env.UNITY_PROJECT_PATH),
               format('{0}/ProjectSettings/**', env.UNITY_PROJECT_PATH)
             ) }}
           restore-keys: |
-            Library-ubuntu-latest-WebGL-
-            Library-ubuntu-latest-
+            Library-v2-ubuntu-latest-WebGL-
 
       - name: Setup Unity
         uses: buildalon/unity-setup@v3
