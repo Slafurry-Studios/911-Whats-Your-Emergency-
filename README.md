@@ -1,8 +1,8 @@
-# Sourdough-Starter
-Unity 2022.3 LTS URP starter for Slafurry Studios — GameSystem base classes, Drive asset sync, and itch.io deploy included.
+# 911, What's Your Emergency?
+A short 2D top-down psychological survival-horror game about a kidnapped girl, a damaged phone, and the voice of a 911 operator. Built with Unity 2022.3 LTS for WebGL by Slafurry Studios.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/9dee6058-b82a-43b4-ae26-eab6ffe699da" width="100%" alt="Sourdough-Starter banner" />
+  <img src="https://github.com/user-attachments/assets/258e6ae0-0b67-4e54-ac6a-bde65b53e741" width="100%" alt="911-whats-your-emergency banner" />
 </p>
 
 <br>
@@ -15,7 +15,7 @@ Unity 2022.3 LTS URP starter for Slafurry Studios — GameSystem base classes, D
 ---
 
 ## ABOUT
-Short paragraph explaining the project's purpose, scope, and what makes it worth using or contributing to. 2-4 sentences max.
+You play as a young girl kidnapped and trapped inside a dangerous man's house in a remote forest. She cannot fight back, but she has found an old phone with a faulty charger, and a 911 operator on the line may be her only chance of survival. Experienced entirely through a frightened child's eyes, the game explores fear, vulnerability, and the desperate hope of being rescued.
 
 ---
 
@@ -27,15 +27,18 @@ Short paragraph explaining the project's purpose, scope, and what makes it worth
 ---
 
 ## FEATURES
-- Feature one, described in a single clear line
-- Feature two
-- Feature three
-- Feature four
+- Stealth-based survival: hide in cabinets, wardrobes, and under furniture instead of fighting
+- Phone resource management: keep an old phone charged by adjusting a faulty charger while you talk
+- 911 communication: answer the operator's questions about the kidnapper and your surroundings
+- Throwable items: toss small objects to stun the kidnapper and buy yourself time
+- Dynamic enemy AI: the kidnapper reacts to noise, grows more aggressive, and destroys hiding places
+- Gut instinct system: visual warnings that hint at nearby danger
+- Environmental storytelling: previous victims' belongings and documents hint at what happened here
 
 ---
 
 ## ARCHITECTURE
-Brief summary of the core architecture pattern used, with a link to the full doc for anyone who wants details.
+The project follows the Sourdough-Starter layout: persistent cross-scene Systems (Audio, Save, Scene, Localization) built on shared `GameSystem` base classes, per-session Managers that coordinate gameplay, per-instance controllers and entities, and reactive UI observers.
 
 ```
 Assets/_Game/
@@ -89,8 +92,11 @@ CI/CD covers Google Drive asset sync (`track`/`retrieve`), a **PR compile gate**
 ## TEAM
 | Role | Name |
 |---|---|
-| [Role] | [Name] |
-| [Role] | [Name] |
+| Project Manager, Game Designer, Unity Programmer | Lord Zaini |
+| Level Designer, Unity Programmer | TiramissuCake |
+| 2D Artist, UI Designer | Fekanme |
+| Audio Engineer | Ifanitas |
+| Narrative Designer | americano |
 
 ---
 
