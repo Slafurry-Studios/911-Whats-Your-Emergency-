@@ -46,6 +46,15 @@ public class HideArea : MonoBehaviour, IInteractable
         RefreshVisual();
     }
 
+    // PlayerHide may not exist yet when this enables: subscribe as soon as it does.
+    private void Update()
+    {
+        if (_subscribed || PlayerHide.Instance == null) return;
+        PlayerHide.Instance.OnHideStateChanged += OnHideStateChanged;
+        _subscribed = true;
+        RefreshVisual();
+    }
+
     private void OnHideStateChanged(bool isHidden) => RefreshVisual();
 
     private void RefreshVisual()

@@ -30,6 +30,8 @@ public class PhoneBattery : MonoBehaviour
     {
         if (Percent <= 0f) return;
         if (_data.BatteryDrainPerSecond <= 0f) return;
+        // The phone only drains once the player actually has it.
+        if (PhonePresence.Instance != null && !PhonePresence.Instance.HasPhone) return;
 
         float drain = _data.BatteryDrainPerSecond;
         if (PlayerHide.Instance != null && PlayerHide.Instance.IsHidden)

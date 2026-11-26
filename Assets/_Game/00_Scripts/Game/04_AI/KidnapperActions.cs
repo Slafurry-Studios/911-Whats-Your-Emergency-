@@ -28,6 +28,7 @@ public class KidnapperActions : MonoBehaviour
     private bool _hasGoal;
     private float _nextRepath;
     private float _speed;
+    private bool _reachedPathEnd;
 
     private float _slowUntil = float.NegativeInfinity;
     private float _slowMultiplier = 1f;
@@ -42,6 +43,9 @@ public class KidnapperActions : MonoBehaviour
     public bool IsBusy => _onBusyDone != null;
     public string BusyWith { get; private set; }
     public bool HasPath => _hasGoal && _index < _path.Count;
+
+    /// <summary>Started forcing a closed door open (audio / camera shake hook).</summary>
+    public event System.Action<Door> OnForcingDoor;
 
     /// <summary>Speed multiplier from external sources (e.g. Brain tuning). 1 = normal.</summary>
     public float SpeedScale { get; set; } = 1f;
@@ -58,7 +62,15 @@ public class KidnapperActions : MonoBehaviour
     public bool MoveTo(Vector2 goal, float speed, float arriveDistance = 0.3f)
     {
         if (IsBusy) return false;
-        if (Vector2.Distance(Position, goal) <= arriveDistance)
+        float dist = Vector2.Distance(Position, goal);
+        if (dist <= arriveDistance)
+        {
+            Stop();
+            return true;
+        }
+        // Goals on props (hide spots, outlets) aren't walkable: the path ends on the nearest free
+        // cell next to them. Walking that path to its end counts as arriving.
+        if (_hasGoal && _reachedPathEnd && Vector2.Distance(goal, _goal) <= 0.75f && dist <= arriveDistance + 1.6f)
         {
             Stop();
             return true;
@@ -76,9 +88,12 @@ public class KidnapperActions : MonoBehaviour
         _hasGoal = true;
         _nextRepath = Time.time + _repathInterval;
         _index = 0;
+        _reachedPathEnd = false;
         var finder = GridPathfinder.Instance;
         if (finder == null || !finder.FindPath(Position, goal, _path))
             _path.Clear(); // unreachable: stand still rather than walk through walls
+        else if (_path.Count == 0)
+            _reachedPathEnd = true; // already on the closest reachable cell
     }
 
     public void Stop()
@@ -156,6 +171,7 @@ public class KidnapperActions : MonoBehaviour
         if (door != null)
         {
             FaceTowards(door.transform.position);
+            OnForcingDoor?.Invoke(door);
             DoAfter(_doorForceTime, "forcing door", door.ForceOpen);
             return;
         }
@@ -178,6 +194,7 @@ public class KidnapperActions : MonoBehaviour
             }
         }
 
+        if (_index >= _path.Count) _reachedPathEnd = true;
         Velocity = (pos - Position) / Time.fixedDeltaTime;
         if (Velocity.sqrMagnitude > 0.01f) Facing = Velocity.normalized;
         _rb.MovePosition(pos);

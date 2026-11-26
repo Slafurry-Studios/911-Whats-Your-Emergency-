@@ -1852,7 +1852,7 @@ MonoBehaviour:
   _aboutButton: {fileID: 39840457}
   _settingsButton: {fileID: 1218317751}
   _exitButton: {fileID: 1883226489}
-  _startScene: {fileID: 11400000, guid: a74ade2b0c23b440594f54aa7f7a4574, type: 2}
+  _startScene: {fileID: 11400000, guid: affd77269906720589e6564bad6188ca, type: 2}
   _aboutScene: {fileID: 11400000, guid: 515c74ee539a47579b4b3b02b1fcd723, type: 2}
   _settingsScene: {fileID: 11400000, guid: 65b8f65a79d3a68a49e1ccb580876594, type: 2}
   _exitPopup: {fileID: 1266492042}

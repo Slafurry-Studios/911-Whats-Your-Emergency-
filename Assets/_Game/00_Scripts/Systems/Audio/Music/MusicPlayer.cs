@@ -28,6 +28,9 @@ namespace Slafurry.Systems.Audio
                 SceneLoader.Instance.OnSceneLoadCompleted -= HandleSceneLoaded;
         }
 
+        /// <summary>Play the track mapped to this scene (sceneTracks), falling back to a track named like the scene.</summary>
+        public void PlayForScene(string sceneName) => HandleSceneLoaded(sceneName);
+
         private void HandleSceneLoaded(string sceneName)
         {
             string trackToPlay = null;

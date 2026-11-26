@@ -1462,7 +1462,8 @@ GameObject:
   - component: {fileID: 345363373432603265}
   - component: {fileID: 5346124126635549563}
   - component: {fileID: 2776834488078378907}
-  m_Layer: 3
+  - component: {fileID: 7516825466096843397}
+  m_Layer: 6
   m_Name: Door_Exit_Locked
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1581,6 +1582,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.08, y: 0.32}
   m_EdgeRadius: 0
+--- !u!114 &7516825466096843397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4008010552908327478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d1bed4d225aa5c29be47e1c7e793d7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prompt: Try the door
+  _message: It's locked. The police are my only way out.
 --- !u!1 &4282408128822376495
 GameObject:
   m_ObjectHideFlags: 0
