@@ -12,4 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e0307bdc683facf99b48dbde6ecc84f, type: 3}
   m_Name: Music Data
   m_EditorClassIdentifier: 
-  tracks: []
+  tracks:
+  - music: {fileID: 11400000, guid: ee74df6bdb8995b91ad12e0e62ef375e, type: 2}
+    clip: {fileID: 8300000, guid: e1d80f75032bd95a499a78a1a39c4186, type: 3}
+    introClip: {fileID: 0}
+    volume: 0.45
+    fadeIn: 2
+    fadeOut: 2
+  - music: {fileID: 11400000, guid: 058fe7df9f4fd4053aef006e9fdf6eb3, type: 2}
+    clip: {fileID: 8300000, guid: f1127785bb8e60377a72d3937f134372, type: 3}
+    introClip: {fileID: 0}
+    volume: 0.5
+    fadeIn: 2
+    fadeOut: 2
+  - music: {fileID: 11400000, guid: 60396f093037a3b96b0ff7de6d44bbc8, type: 2}
+    clip: {fileID: 8300000, guid: bbfbd6bfa7a7c419db244bd1cf266f1c, type: 3}
+    introClip: {fileID: 0}
+    volume: 0.6
+    fadeIn: 0.5
+    fadeOut: 1.5
+  - music: {fileID: 11400000, guid: f4c9ccce99f2834e2887c3d2b15d1a03, type: 2}
+    clip: {fileID: 8300000, guid: b512f5bb2380b13fc80d3f4d1fe806a1, type: 3}
+    introClip: {fileID: 0}
+    volume: 0.6
+    fadeIn: 0.2
+    fadeOut: 1
+  - music: {fileID: 11400000, guid: 5491048b030892fcc883a38a28a39a48, type: 2}
+    clip: {fileID: 8300000, guid: 597a4a87851b4841b8f460ac442b8e17, type: 3}
+    introClip: {fileID: 0}
+    volume: 0.55
+    fadeIn: 2
+    fadeOut: 2

@@ -39,9 +39,23 @@ public class PlayerInteract : BaseTrigger
         UpdateTarget();
     }
 
+    // Measure from the body collider (the feet), which is what touches doors and items —
+    // the transform is the sprite centre, well above the feet in this top-down view.
+    private Vector2 Origin
+    {
+        get
+        {
+            if (_body == null) _body = GetComponent<Collider2D>();
+            return _body != null ? (Vector2)_body.bounds.center : (Vector2)transform.position;
+        }
+    }
+
+    private Collider2D _body;
+
     private void UpdateTarget()
     {
-        var hits = Physics2D.OverlapCircleAll(transform.position, interactRadius, interactLayer);
+        Vector2 origin = Origin;
+        var hits = Physics2D.OverlapCircleAll(origin, interactRadius, interactLayer);
 
         IInteractable nearest = null;
         float nearestDistance = float.MaxValue;
@@ -51,7 +65,7 @@ public class PlayerInteract : BaseTrigger
             var interactable = hit.gameObject.GetComponent<IInteractable>();
             if (interactable == null || !interactable.CanInteract) continue;
 
-            float distance = Vector2.Distance(transform.position, hit.transform.position);
+            float distance = Vector2.Distance(origin, hit.ClosestPoint(origin));
             if (distance < nearestDistance)
             {
                 nearestDistance = distance;
@@ -84,7 +98,7 @@ public class PlayerInteract : BaseTrigger
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, interactRadius);
+        Gizmos.DrawWireSphere(Origin, interactRadius);
     }
 
     private void OnDisable()

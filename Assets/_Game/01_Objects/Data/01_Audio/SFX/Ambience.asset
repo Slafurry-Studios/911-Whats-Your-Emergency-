@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1f389c41d65c452db0308108628f351, type: 3}
+  m_Name: Ambience
+  m_EditorClassIdentifier: 
+  categoryName: Ambience
+  effects:
+  - groupID: night
+    clips:
+    - {fileID: 8300000, guid: 026b5c04a61ae54fd9310fba13ebd625, type: 3}
+    volume: 0.3
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 1
+    maxDistance: 15
+  - groupID: crickets
+    clips:
+    - {fileID: 8300000, guid: 9aca8255211d908f19ff0ef677b46437, type: 3}
+    volume: 0.18
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 1
+    maxDistance: 15
+  - groupID: owl
+    clips:
+    - {fileID: 8300000, guid: ae6747f3f95d02e3db143651619e0ca2, type: 3}
+    volume: 0.45
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 2
+    maxDistance: 20
+  - groupID: wood_creak
+    clips:
+    - {fileID: 8300000, guid: 2567272e9501d713cb5e4a3e59550d23, type: 3}
+    volume: 0.45
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 2
+    maxDistance: 18
+  - groupID: door_creak
+    clips:
+    - {fileID: 8300000, guid: 25ceb1362602c25d1a55c5dbe8ca00cf, type: 3}
+    volume: 0.4
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 2
+    maxDistance: 18
+  - groupID: room
+    clips:
+    - {fileID: 8300000, guid: 2890f96b3eebb2e82b86a418459afeca, type: 3}
+    volume: 0.4
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 2
+    maxDistance: 18
+  poolSize: 6

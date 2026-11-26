@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1f389c41d65c452db0308108628f351, type: 3}
+  m_Name: Police
+  m_EditorClassIdentifier: 
+  categoryName: Police
+  effects:
+  - groupID: announcer1
+    clips:
+    - {fileID: 8300000, guid: bd79a8636a1687bc0b84f7a4172009ae, type: 3}
+    volume: 0.8
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 1
+    maxDistance: 15
+  - groupID: announcer2
+    clips:
+    - {fileID: 8300000, guid: 7b466c888515bb087b3b1303accb8da5, type: 3}
+    volume: 0.8
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 1
+    maxDistance: 15
+  - groupID: report1
+    clips:
+    - {fileID: 8300000, guid: 3eb2d2c2f41521d11b93695e5ddc8d1d, type: 3}
+    volume: 0.85
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 1
+    maxDistance: 15
+  - groupID: report2
+    clips:
+    - {fileID: 8300000, guid: e369fe495c538fb1abcd7ff44f606585, type: 3}
+    volume: 0.85
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 1
+    maxDistance: 15
+  - groupID: report3
+    clips:
+    - {fileID: 8300000, guid: 6a530e0b2686c6a699b7f8b9abfa6037, type: 3}
+    volume: 0.85
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 1
+    maxDistance: 15
+  - groupID: report4
+    clips:
+    - {fileID: 8300000, guid: 979eaf2cc36acdbcdaf5f6b25ce525d6, type: 3}
+    volume: 0.85
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 1
+    maxDistance: 15
+  - groupID: gunshot
+    clips:
+    - {fileID: 8300000, guid: 733c6f8735765365f8ec0f7028c1ba8f, type: 3}
+    volume: 1
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 1
+    maxDistance: 15
+  - groupID: siren
+    clips:
+    - {fileID: 8300000, guid: 23edd7c7296b4de9a99cadc6034837f0, type: 3}
+    volume: 0.6
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 1
+    maxDistance: 15
+  - groupID: radio
+    clips:
+    - {fileID: 8300000, guid: af88081e3043bebb2808ef60bb25f599, type: 3}
+    volume: 0.25
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 1
+    maxDistance: 15
+  poolSize: 6

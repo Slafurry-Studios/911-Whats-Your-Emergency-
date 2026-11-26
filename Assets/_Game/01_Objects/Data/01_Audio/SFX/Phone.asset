@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1f389c41d65c452db0308108628f351, type: 3}
+  m_Name: Phone
+  m_EditorClassIdentifier: 
+  categoryName: Phone
+  effects:
+  - groupID: lowbat
+    clips:
+    - {fileID: 8300000, guid: 1aec2e6444f166baf9f3d163a6045f4c, type: 3}
+    volume: 0.8
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 1
+    maxDistance: 15
+  - groupID: interference
+    clips:
+    - {fileID: 8300000, guid: 39902349e68b53f009b9f00db27679eb, type: 3}
+    volume: 0.6
+    maxSimultaneous: 1
+    fadeIn: 0
+    fadeOut: 0.4
+    distanceOnlyNoPanning: 1
+    rolloffMode: 1
+    minDistance: 1
+    maxDistance: 15
+  poolSize: 3

@@ -263,12 +263,14 @@ namespace Slafurry.Utils.UI
         private void PlayTypeSfx()
         {
             if (AudioSystem.Instance == null) return;
+            if (string.IsNullOrEmpty(sfxCategory) || string.IsNullOrEmpty(typeSFX)) return;
             Audio.PlaySFX2D(sfxCategory, typeSFX, loop: true);
         }
 
         private void StopTypeSfx()
         {
             if (AudioSystem.Instance == null) return;
+            if (string.IsNullOrEmpty(sfxCategory) || string.IsNullOrEmpty(typeSFX)) return;
             Audio.StopSFX(sfxCategory, typeSFX);
         }
     }

@@ -49,6 +49,10 @@ public class KidnapperBrain : MonoBehaviour, IThrowHittable
     [SerializeField] private float _sabotageCooldown = 40f;
     [SerializeField] private float _sabotageCooldownAggro = 15f;
 
+    [Header("Wake up")]
+    [Tooltip("He stays still until the player picks up the phone or this many seconds pass.")]
+    [SerializeField] private float _wakeAfterSeconds = 30f;
+
     [Header("Wander")]
     [SerializeField] private Vector2 _wanderPause = new Vector2(1f, 3f);
     [Tooltip("At full aggression he wanders within this distance of the player (he senses them).")]
@@ -65,6 +69,20 @@ public class KidnapperBrain : MonoBehaviour, IThrowHittable
     private float _nextSabotage;
 
     public State Current { get; private set; } = State.Wander;
+    public bool IsAwake { get; private set; }
+
+    /// <summary>While true he stays asleep no matter what (tutorial steps before he appears).</summary>
+    public static bool HoldAsleep;
+
+    // Hooks for audio / game feel (no gameplay logic listens to these).
+    public event System.Action OnWokeUp;
+    public event System.Action OnSpottedPlayer;      // lost → sees the player
+    public event System.Action OnAttacked;           // hit the player
+    public event System.Action<Vector2> OnHitByItem; // a thrown item hit him
+    public event System.Action<Vector2> OnBrokeSomething; // hide spot / outlet destroyed
+
+    private bool _sawPlayer;
+    private float _startTime;
 
     private float A => _sensor.Aggression;
     private float SlowDuration => Mathf.Lerp(_slowDuration, _slowDurationAggro, A);
@@ -75,7 +93,35 @@ public class KidnapperBrain : MonoBehaviour, IThrowHittable
         _actions = GetComponent<KidnapperActions>();
     }
 
-    private void Start() => _nextSabotage = Time.time + _sabotageCooldown;
+    private void Start()
+    {
+        _startTime = Time.time;
+        _nextSabotage = Time.time + _sabotageCooldown;
+    }
+
+    /// <summary>Wake him now (tutorial).</summary>
+    public void WakeUp()
+    {
+        if (IsAwake) return;
+        IsAwake = true;
+        _nextSabotage = Time.time + _sabotageCooldown;
+        OnWokeUp?.Invoke();
+    }
+
+    /// <summary>Start the "wake after N seconds" countdown again from now.</summary>
+    public void RestartWakeTimer() => _startTime = Time.time;
+
+    private bool CheckAwake()
+    {
+        if (IsAwake) return true;
+        if (HoldAsleep) return false;
+        bool hasPhone = PhonePresence.Instance != null && PhonePresence.Instance.HasPhone;
+        if (!hasPhone && Time.time - _startTime < _wakeAfterSeconds) return false;
+        IsAwake = true;
+        _nextSabotage = Time.time + _sabotageCooldown;
+        OnWokeUp?.Invoke();
+        return true;
+    }
 
     private void Update()
     {
@@ -84,9 +130,15 @@ public class KidnapperBrain : MonoBehaviour, IThrowHittable
             _actions.Stop();
             return;
         }
+        if (!CheckAwake()) return;
+
+        bool sees = _sensor.SeesPlayer;
+        if (sees && !_sawPlayer) OnSpottedPlayer?.Invoke();
+        _sawPlayer = sees;
+
         if (_actions.IsBusy) return;
 
-        if (_sensor.SeesPlayer) { Chase(); return; }
+        if (sees) { Chase(); return; }
         if (_sensor.SeenHidingIn != null) { BreakHideSpot(_sensor.SeenHidingIn); return; }
         if (_sensor.TimeSinceSeen < Mathf.Lerp(_searchTime, _searchTimeAggro, A)) { Search(); return; }
         _reachedLastSeen = false;
@@ -117,6 +169,7 @@ public class KidnapperBrain : MonoBehaviour, IThrowHittable
 
         float damage = health.Max / Mathf.Max(1, _hitsToKill) + 0.01f;
         _actions.Strike(health, damage);
+        OnAttacked?.Invoke();
 
         // Like being hit by a throw: he slows down so the player can get away.
         _actions.ApplySlow(SlowDuration, _slowMultiplier);
@@ -132,6 +185,7 @@ public class KidnapperBrain : MonoBehaviour, IThrowHittable
         _actions.DoAfter(Mathf.Lerp(_breakTime, _breakTimeAggro, A), "breaking hide spot", () =>
         {
             spot.Break();
+            OnBrokeSomething?.Invoke(spot.transform.position);
             _sensor.ForgetHideSpot();
         });
     }
@@ -206,6 +260,7 @@ public class KidnapperBrain : MonoBehaviour, IThrowHittable
         {
             if (target is HideArea h) h.Break();
             else if (target is ChargingOutlet o) o.Break();
+            OnBrokeSomething?.Invoke(target.transform.position);
             _sabotageTarget = null;
         });
     }
@@ -254,6 +309,8 @@ public class KidnapperBrain : MonoBehaviour, IThrowHittable
     // ------------------------------------------------------------------ IThrowHittable
     public void OnHitByThrow(Vector2 hitPoint, Vector2 direction)
     {
+        OnHitByItem?.Invoke(hitPoint);
+        if (!IsAwake) { IsAwake = true; OnWokeUp?.Invoke(); }
         _actions.ApplySlow(SlowDuration, _slowMultiplier);
         // Turn toward where it came from — likely spots the thrower.
         if (direction.sqrMagnitude > 0.0001f)

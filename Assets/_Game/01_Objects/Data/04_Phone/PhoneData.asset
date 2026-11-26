@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   startSignalLevel: 4
   maxSignalLevel: 4
-  startBatteryPercent: 1
+  startBatteryPercent: 40
   batteryDrainPerSecond: 0.5
   hiddenDrainMultiplier: 0.25
   startVolume: 0.5

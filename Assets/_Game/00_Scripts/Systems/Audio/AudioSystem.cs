@@ -9,8 +9,14 @@ namespace Slafurry.Systems.Audio
 {
     public static class Audio
     {
+        /// <summary>False when no AudioSystem is loaded (e.g. a gameplay scene played without Boot).
+        /// Every call below is then silently ignored instead of throwing.</summary>
+        public static bool IsReady => AudioSystem.Instance != null;
+
         public static void PlayMusic(string trackName, float fade = -1f)
-            => AudioSystem.Music.PlayMusic(trackName, fade);
+        {
+            if (IsReady) AudioSystem.Music.PlayMusic(trackName, fade);
+        }
 
         public static void PlayMusic(MusicReference music, float fade = -1f)
         {
@@ -24,11 +30,15 @@ namespace Slafurry.Systems.Audio
         }
 
         public static void StopMusic(float fade = -1f)
-            => AudioSystem.Music.StopMusic(fade);
+        {
+            if (IsReady) AudioSystem.Music.StopMusic(fade);
+        }
 
         // fadeIn/fadeOut: -1f (default) = use per-effect setting from SFXEffect, fill manually to override
         public static void PlaySFX2D(string category, string effect, bool loop = false, float fadeIn = -1f)
-            => AudioSystem.SFX.PlaySFX2D(category, effect, loop, fadeIn);
+        {
+            if (IsReady) AudioSystem.SFX.PlaySFX2D(category, effect, loop, fadeIn);
+        }
 
         public static void PlaySFX2D(SFXReference sfx, bool loop = false, float fadeIn = -1f)
         {
@@ -42,7 +52,9 @@ namespace Slafurry.Systems.Audio
         }
 
         public static void PlaySFX3D(string category, string effect, Vector3 pos, bool loop = false, float fadeIn = -1f)
-            => AudioSystem.SFX.PlaySFX3D(category, effect, pos, loop, fadeIn);
+        {
+            if (IsReady) AudioSystem.SFX.PlaySFX3D(category, effect, pos, loop, fadeIn);
+        }
 
         public static void PlaySFX3D(SFXReference sfx, Vector3 pos, bool loop = false, float fadeIn = -1f)
         {
@@ -56,13 +68,19 @@ namespace Slafurry.Systems.Audio
         }
 
         public static void StopSFX(float fadeOut = -1f)
-            => AudioSystem.SFX.StopAllSFX(fadeOut);
+        {
+            if (IsReady) AudioSystem.SFX.StopAllSFX(fadeOut);
+        }
 
         public static void StopSFX(string category, float fadeOut = -1f)
-            => AudioSystem.SFX.StopCategory(category, fadeOut);
+        {
+            if (IsReady) AudioSystem.SFX.StopCategory(category, fadeOut);
+        }
 
         public static void StopSFX(string category, string effect, float fadeOut = -1f)
-            => AudioSystem.SFX.StopSFX(category, effect, fadeOut);
+        {
+            if (IsReady) AudioSystem.SFX.StopSFX(category, effect, fadeOut);
+        }
 
         public static void StopSFX(SFXReference sfx, float fadeOut = -1f)
         {
@@ -133,8 +151,9 @@ namespace Slafurry.Systems.Audio
 
         public void PlaySceneMusic()
         {
-            string currentSceneName = SceneManager.GetActiveScene().name;
-            musicPlayer.PlayMusic(currentSceneName);
+            // Use the scene → track mapping too: the first scene can finish loading before this
+            // system initialises, so its load event is missed.
+            musicPlayer.PlayForScene(SceneManager.GetActiveScene().name);
         }
 
         // ======================== VOLUME CHANGER (dalam dB) ========================
