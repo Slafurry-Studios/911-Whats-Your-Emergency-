@@ -1,247 +1,247 @@
-name: Track Drive Changes
+# name: Track Drive Changes
 
-on:
-  schedule:
-    - cron: '0 23 * * *'  # 07:00 WITA (UTC+8) daily
-  workflow_dispatch: {}
+# on:
+#   schedule:
+#     - cron: '0 23 * * *'  # 07:00 WITA (UTC+8) daily
+#   workflow_dispatch: {}
 
-permissions:
-  contents: write
-  pull-requests: write
+# permissions:
+#   contents: write
+#   pull-requests: write
 
-# ------------------------------------------------------------
-# All config lives here — never hardcode values in run steps.
-#   vars.*    → non-credential repository variables
-#   secrets.* → credentials (repository secrets)
-# Steps reference these as "$NAME".
-# ------------------------------------------------------------
-env:
-  # Non-credential (Settings → Secrets and variables → Actions → Variables)
-  GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.5-flash' }}
-  # Asset-bot persona — distinct from deploy bot (vars.GEMINI_PERSONA).
-  GEMINI_PERSONA: ${{ vars.GEMINI_PERSONA_ASSET || 'You are the Drive Archivist for Slafurry Studios, a friendly no-nonsense librarian of game assets. You announce Drive changes (new, changed, deleted files) as if updating the studio inventory log. Precise, tidy, zero fluff. Call the team "Tim". Keep every message under 3 sentences, no markdown.' }}
-  DRIVE_SPRITE_FOLDER_ID: ${{ vars.DRIVE_SPRITE_FOLDER_ID }}
-  DRIVE_AUDIO_FOLDER_ID: ${{ vars.DRIVE_AUDIO_FOLDER_ID }}
-  BOT_GIT_USERNAME: ${{ vars.BOT_GIT_USERNAME || 'Kozeki Ui' }}
-  BOT_GIT_EMAIL: ${{ vars.BOT_GIT_EMAIL || '45u35+kozeki-ui[bot]@users.noreply.github.com' }}
+# # ------------------------------------------------------------
+# # All config lives here — never hardcode values in run steps.
+# #   vars.*    → non-credential repository variables
+# #   secrets.* → credentials (repository secrets)
+# # Steps reference these as "$NAME".
+# # ------------------------------------------------------------
+# env:
+#   # Non-credential (Settings → Secrets and variables → Actions → Variables)
+#   GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.5-flash' }}
+#   # Asset-bot persona — distinct from deploy bot (vars.GEMINI_PERSONA).
+#   GEMINI_PERSONA: ${{ vars.GEMINI_PERSONA_ASSET || 'You are the Drive Archivist for Slafurry Studios, a friendly no-nonsense librarian of game assets. You announce Drive changes (new, changed, deleted files) as if updating the studio inventory log. Precise, tidy, zero fluff. Call the team "Tim". Keep every message under 3 sentences, no markdown.' }}
+#   DRIVE_SPRITE_FOLDER_ID: ${{ vars.DRIVE_SPRITE_FOLDER_ID }}
+#   DRIVE_AUDIO_FOLDER_ID: ${{ vars.DRIVE_AUDIO_FOLDER_ID }}
+#   BOT_GIT_USERNAME: ${{ vars.BOT_GIT_USERNAME || 'Kozeki Ui' }}
+#   BOT_GIT_EMAIL: ${{ vars.BOT_GIT_EMAIL || '45u35+kozeki-ui[bot]@users.noreply.github.com' }}
 
-  # Credentials (Settings → Secrets and variables → Actions → Secrets)
-  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-  GOOGLE_SERVICE_ACCOUNT_JSON_B64: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON_B64 }}
-  DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+#   # Credentials (Settings → Secrets and variables → Actions → Secrets)
+#   GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+#   GOOGLE_SERVICE_ACCOUNT_JSON_B64: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON_B64 }}
+#   DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
-jobs:
-  track:
-    runs-on: ubuntu-latest
+# jobs:
+#   track:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
+#     steps:
+#       - uses: actions/checkout@v4
+#         with:
+#           ref: main
+#           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+#       - uses: actions/setup-python@v5
+#         with:
+#           python-version: '3.11'
 
-      - run: pip install -r requirements.txt
+#       - run: pip install -r requirements.txt
 
-      - name: Sync latest state from main
-        run: |
-          git fetch origin main
+#       - name: Sync latest state from main
+#         run: |
+#           git fetch origin main
 
-          rm -rf state
-          mkdir -p state
+#           rm -rf state
+#           mkdir -p state
 
-          git archive origin/main -- state 2>/dev/null | tar -x || true
+#           git archive origin/main -- state 2>/dev/null | tar -x || true
 
-      - name: Check sprite folder for changes
-        run: |
-          python track.py \
-            --drive-folder-id "$DRIVE_SPRITE_FOLDER_ID" \
-            --service-account-b64 "$GOOGLE_SERVICE_ACCOUNT_JSON_B64" \
-            --discord-webhook "$DISCORD_WEBHOOK_URL" \
-            --state-file "state/sprite_manifest.json" \
-            --project-name "$GITHUB_REPOSITORY (sprite)"
+#       - name: Check sprite folder for changes
+#         run: |
+#           python track.py \
+#             --drive-folder-id "$DRIVE_SPRITE_FOLDER_ID" \
+#             --service-account-b64 "$GOOGLE_SERVICE_ACCOUNT_JSON_B64" \
+#             --discord-webhook "$DISCORD_WEBHOOK_URL" \
+#             --state-file "state/sprite_manifest.json" \
+#             --project-name "$GITHUB_REPOSITORY (sprite)"
 
-      - name: Check audio folder for changes
-        run: |
-          python track.py \
-            --drive-folder-id "$DRIVE_AUDIO_FOLDER_ID" \
-            --service-account-b64 "$GOOGLE_SERVICE_ACCOUNT_JSON_B64" \
-            --discord-webhook "$DISCORD_WEBHOOK_URL" \
-            --state-file "state/audio_manifest.json" \
-            --project-name "$GITHUB_REPOSITORY (audio)"
+#       - name: Check audio folder for changes
+#         run: |
+#           python track.py \
+#             --drive-folder-id "$DRIVE_AUDIO_FOLDER_ID" \
+#             --service-account-b64 "$GOOGLE_SERVICE_ACCOUNT_JSON_B64" \
+#             --discord-webhook "$DISCORD_WEBHOOK_URL" \
+#             --state-file "state/audio_manifest.json" \
+#             --project-name "$GITHUB_REPOSITORY (audio)"
 
-      # State is bookkeeping (deleted_in_drive flags, retrieve timestamps), not assets.
-      # main ruleset requires a PR — state lands on retrieve-assets via force-push,
-      # then the PR merges it into main. Force push only touches retrieve-assets;
-      # never main directly. Merge promptly or next run sees stale state and
-      # re-notifies the same deletes.
-      - name: Commit updated state to retrieve-assets
-        id: state_commit
-        run: |
-          git config user.name "$BOT_GIT_USERNAME"
-          git config user.email "$BOT_GIT_EMAIL"
+#       # State is bookkeeping (deleted_in_drive flags, retrieve timestamps), not assets.
+#       # main ruleset requires a PR — state lands on retrieve-assets via force-push,
+#       # then the PR merges it into main. Force push only touches retrieve-assets;
+#       # never main directly. Merge promptly or next run sees stale state and
+#       # re-notifies the same deletes.
+#       - name: Commit updated state to retrieve-assets
+#         id: state_commit
+#         run: |
+#           git config user.name "$BOT_GIT_USERNAME"
+#           git config user.email "$BOT_GIT_EMAIL"
 
-          git fetch origin main
-          # Rebase local HEAD onto latest main (keeps working-tree changes).
-          git checkout -B main origin/main
+#           git fetch origin main
+#           # Rebase local HEAD onto latest main (keeps working-tree changes).
+#           git checkout -B main origin/main
 
-          # Local commit only — force-pushed to retrieve-assets below, never main.
-          git add state/
+#           # Local commit only — force-pushed to retrieve-assets below, never main.
+#           git add state/
 
-          if git diff --cached --quiet; then
-            echo "No state changes, skipping."
-            echo "has_changes=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
+#           if git diff --cached --quiet; then
+#             echo "No state changes, skipping."
+#             echo "has_changes=false" >> "$GITHUB_OUTPUT"
+#             exit 0
+#           fi
 
-          git commit -m "chore(assets): update drive state [skip ci]"
-          git push -f origin HEAD:retrieve-assets
-          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+#           git commit -m "chore(assets): update drive state [skip ci]"
+#           git push -f origin HEAD:retrieve-assets
+#           echo "has_changes=true" >> "$GITHUB_OUTPUT"
 
-      - name: Ensure PR
-        if: steps.state_commit.outputs.has_changes == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.PR_PAT || secrets.GITHUB_TOKEN }}
-        run: |
-          TITLE="chore(assets): update drive state"
-          BODY="Automated state sync from Google Drive track run.
+#       - name: Ensure PR
+#         if: steps.state_commit.outputs.has_changes == 'true'
+#         env:
+#           GH_TOKEN: ${{ secrets.PR_PAT || secrets.GITHUB_TOKEN }}
+#         run: |
+#           TITLE="chore(assets): update drive state"
+#           BODY="Automated state sync from Google Drive track run.
 
-          State lands here first; merge to main to accept.
-          Force-pushed every track run — do not commit to this branch manually.
+#           State lands here first; merge to main to accept.
+#           Force-pushed every track run — do not commit to this branch manually.
 
-          Last updated: $(date -u +'%Y-%m-%d %H:%M UTC')"
+#           Last updated: $(date -u +'%Y-%m-%d %H:%M UTC')"
 
-          OPEN_PR=$(gh pr list \
-            --head retrieve-assets \
-            --state open \
-            --repo "$GITHUB_REPOSITORY" \
-            --json number \
-            --jq '.[0].number')
+#           OPEN_PR=$(gh pr list \
+#             --head retrieve-assets \
+#             --state open \
+#             --repo "$GITHUB_REPOSITORY" \
+#             --json number \
+#             --jq '.[0].number')
 
-          if [ -n "$OPEN_PR" ]; then
-            echo "Open PR #$OPEN_PR already exists."
-            gh pr edit "$OPEN_PR" \
-              --title "$TITLE" \
-              --body "$BODY" \
-              --repo "$GITHUB_REPOSITORY"
-          else
-            echo "No open PR found, creating a new one."
-            gh pr create \
-              --base main \
-              --head retrieve-assets \
-              --title "$TITLE" \
-              --body "$BODY" \
-              --repo "$GITHUB_REPOSITORY"
-          fi
+#           if [ -n "$OPEN_PR" ]; then
+#             echo "Open PR #$OPEN_PR already exists."
+#             gh pr edit "$OPEN_PR" \
+#               --title "$TITLE" \
+#               --body "$BODY" \
+#               --repo "$GITHUB_REPOSITORY"
+#           else
+#             echo "No open PR found, creating a new one."
+#             gh pr create \
+#               --base main \
+#               --head retrieve-assets \
+#               --title "$TITLE" \
+#               --body "$BODY" \
+#               --repo "$GITHUB_REPOSITORY"
+#           fi
 
 
-  # ============================================================
-  # DISCORD FAILURE NOTIFICATION
-  # ============================================================
+#   # ============================================================
+#   # DISCORD FAILURE NOTIFICATION
+#   # ============================================================
 
-  notify-failure:
-    name: Notify Discord (Failure)
+#   notify-failure:
+#     name: Notify Discord (Failure)
 
-    needs:
-      - track
+#     needs:
+#       - track
 
-    if: failure()
+#     if: failure()
 
-    runs-on: ubuntu-latest
+#     runs-on: ubuntu-latest
 
-    steps:
+#     steps:
 
-      - name: Generate failure message with Gemini
-        id: flavor
+#       - name: Generate failure message with Gemini
+#         id: flavor
 
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+#         env:
+#           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
-        shell: bash
+#         shell: bash
 
-        run: |
-          set -e
+#         run: |
+#           set -e
 
-          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+#           RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
-          if [ -n "${GEMINI_LANGUAGE}" ]; then
-            LANGUAGE_INSTRUCTION="Write the response in ${GEMINI_LANGUAGE}."
-          else
-            LANGUAGE_INSTRUCTION="Write the response in the same language used in the persona instructions above."
-          fi
+#           if [ -n "${GEMINI_LANGUAGE}" ]; then
+#             LANGUAGE_INSTRUCTION="Write the response in ${GEMINI_LANGUAGE}."
+#           else
+#             LANGUAGE_INSTRUCTION="Write the response in the same language used in the persona instructions above."
+#           fi
 
-          PROMPT="${GEMINI_PERSONA}
+#           PROMPT="${GEMINI_PERSONA}
 
-          Write ONE short paragraph (maximum 3 sentences, no markdown formatting, no surrounding quotation marks) announcing that the automated Drive change tracking workflow for repository \"${{ github.repository }}\" has FAILED.
+#           Write ONE short paragraph (maximum 3 sentences, no markdown formatting, no surrounding quotation marks) announcing that the automated Drive change tracking workflow for repository \"${{ github.repository }}\" has FAILED.
 
-          Include the workflow run URL: ${RUN_URL}
-          ${LANGUAGE_INSTRUCTION}"
+#           Include the workflow run URL: ${RUN_URL}
+#           ${LANGUAGE_INSTRUCTION}"
 
-          BODY=$(jq -n \
-            --arg prompt "$PROMPT" \
-            '{
-              contents: [
-                {
-                  parts: [
-                    {
-                      text: $prompt
-                    }
-                  ]
-                }
-              ]
-            }')
+#           BODY=$(jq -n \
+#             --arg prompt "$PROMPT" \
+#             '{
+#               contents: [
+#                 {
+#                   parts: [
+#                     {
+#                       text: $prompt
+#                     }
+#                   ]
+#                 }
+#               ]
+#             }')
 
-          RESPONSE=$(curl -sS -X POST \
-            "https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}" \
-            -H "Content-Type: application/json" \
-            -d "$BODY")
+#           RESPONSE=$(curl -sS -X POST \
+#             "https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}" \
+#             -H "Content-Type: application/json" \
+#             -d "$BODY")
 
-          TEXT=$(echo "$RESPONSE" | jq -r \
-            '.candidates[0].content.parts[0].text // empty')
+#           TEXT=$(echo "$RESPONSE" | jq -r \
+#             '.candidates[0].content.parts[0].text // empty')
 
-          if [ -z "$TEXT" ]; then
-            echo "Gemini failed, using fallback message."
-            TEXT="Track drive changes untuk ${{ github.repository }} gagal. Sila cek log: ${RUN_URL}"
-          fi
+#           if [ -z "$TEXT" ]; then
+#             echo "Gemini failed, using fallback message."
+#             TEXT="Track drive changes untuk ${{ github.repository }} gagal. Sila cek log: ${RUN_URL}"
+#           fi
 
-          {
-            echo "text<<GEMINI_EOF"
-            echo "$TEXT"
-            echo "GEMINI_EOF"
-          } >> "$GITHUB_OUTPUT"
+#           {
+#             echo "text<<GEMINI_EOF"
+#             echo "$TEXT"
+#             echo "GEMINI_EOF"
+#           } >> "$GITHUB_OUTPUT"
 
-      - name: Send Discord failure notification
+#       - name: Send Discord failure notification
 
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          FLAVOR_TEXT: ${{ steps.flavor.outputs.text }}
+#         env:
+#           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+#           FLAVOR_TEXT: ${{ steps.flavor.outputs.text }}
 
-        shell: bash
+#         shell: bash
 
-        run: |
-          set -e
+#         run: |
+#           set -e
 
-          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+#           RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
-          PAYLOAD=$(jq -n \
-            --arg content "$FLAVOR_TEXT" \
-            --arg title "Track Failed — ${{ github.repository }}" \
-            --arg url "$RUN_URL" \
-            '{
-              embeds: [
-                {
-                  title: $title,
-                  url: $url,
-                  description: $content,
-                  color: 15548997
-                }
-              ]
-            }')
+#           PAYLOAD=$(jq -n \
+#             --arg content "$FLAVOR_TEXT" \
+#             --arg title "Track Failed — ${{ github.repository }}" \
+#             --arg url "$RUN_URL" \
+#             '{
+#               embeds: [
+#                 {
+#                   title: $title,
+#                   url: $url,
+#                   description: $content,
+#                   color: 15548997
+#                 }
+#               ]
+#             }')
 
-          curl -sS \
-            -H "Content-Type: application/json" \
-            -d "$PAYLOAD" \
-            "$DISCORD_WEBHOOK_URL"
+#           curl -sS \
+#             -H "Content-Type: application/json" \
+#             -d "$PAYLOAD" \
+#             "$DISCORD_WEBHOOK_URL"
