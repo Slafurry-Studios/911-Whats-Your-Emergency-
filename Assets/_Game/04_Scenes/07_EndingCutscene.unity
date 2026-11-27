@@ -319,8 +319,12 @@ MonoBehaviour:
     shakiness: 0
     delayAfter: 1
   - text: You survived the night.
-    duration: 3.5
+    duration: 3
     shakiness: 0.3
+    delayAfter: 0.8
+  - text: 'A hand on your shoulder. "It''s okay. We''re taking you home."'
+    duration: 4.5
+    shakiness: 0
     delayAfter: 0
   typeDelay: 0.035
   sfxCategory: 

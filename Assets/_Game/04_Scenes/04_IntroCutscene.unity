@@ -650,20 +650,20 @@ MonoBehaviour:
     duration: 2.2
     shakiness: 0
     delayAfter: 0.6
-  - text: A sound woke you up. The front door... you're sure you locked it.
-    duration: 4
+  - text: You wake up on a cold wooden floor. This isn't your room. This isn't your home.
+    duration: 4.4
     shakiness: 0.5
     delayAfter: 0.6
-  - text: Footsteps downstairs. Slow. Heavy.
+  - text: Footsteps in the hall. Slow. Heavy. He's still here.
     duration: 3.4
     shakiness: 1.5
     delayAfter: 0.6
-  - text: Someone is inside the house.
+  - text: The man who took you.
     duration: 3
     shakiness: 3
     delayAfter: 0.8
-  - text: Find your phone. Call 911. Stay alive until help comes.
-    duration: 4
+  - text: Somewhere in this house is an old phone. Find it. Call 911. Stay alive until they bring you home.
+    duration: 5
     shakiness: 0.5
     delayAfter: 0
   typeDelay: 0.035

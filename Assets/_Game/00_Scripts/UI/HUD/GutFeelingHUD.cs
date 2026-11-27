@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using TMPro;
 
 namespace Slafurry.UI.HUD
 {
@@ -21,6 +22,15 @@ namespace Slafurry.UI.HUD
             if (_panel == gameObject)
             {
                 Debug.LogError("[GutFeelingHUD] _panel must be a child — not this object.", this);
+                return;
+            }
+
+            // Use the objective's toast slot so it replaces whatever message is there
+            // instead of stacking a second line of text on top of it.
+            var label = _panel.GetComponentInChildren<TMP_Text>(true);
+            if (label != null && ObjectiveHUD.Available)
+            {
+                ObjectiveHUD.Toast(label.text);
                 return;
             }
 

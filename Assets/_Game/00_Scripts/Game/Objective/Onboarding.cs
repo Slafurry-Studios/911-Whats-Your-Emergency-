@@ -8,19 +8,22 @@ using Slafurry.UI.HUD;
 
 /// <summary>
 /// First-round tutorial, one thing at a time:
-/// 1 move → 2 pick up an item → 3 hide (and come out) → 4 throw something at the kidnapper.
-/// The kidnapper is held asleep for steps 1–3, then woken; when he first spots the player time
-/// slows for a moment and the hotbar pulses. Done once (saved); Enter skips it.
+/// 1 move → 2 pick up an item → 3 hide (and come out) → 4 find the old phone → 5 call 911 →
+/// 6 grab the charger and plug it in at an outlet → 7 throw something at the kidnapper.
+/// The kidnapper is held asleep until step 7. The tutorial panel is the only text it uses
+/// (no toasts on top), and it steps aside while the charging screen shows its own guidance.
+/// Done once (saved); Enter skips it.
 /// </summary>
 public class Onboarding : MonoBehaviour
 {
     private const string DoneKey = "911_TutorialDone";
+    private const int Pages = 7;
 
     [SerializeField] private float _moveDistance = 4f;
     [SerializeField] private float _slowMoScale = 0.3f;
     [SerializeField] private float _slowMoSeconds = 1.4f;
 
-    private enum Step { Move, Pickup, Hide, Unhide, Throw, Done }
+    private enum Step { Move, Pickup, Hide, Unhide, Phone, Call, Charger, Plug, Charging, Throw, Done }
 
     private Step _step = Step.Done;
     private KidnapperBrain _kidnapper;
@@ -30,6 +33,9 @@ public class Onboarding : MonoBehaviour
     private bool _itemPicked;
     private bool _spotted;
     private bool _hit;
+    private bool _callAfterCharge;
+    private ItemData _cable;
+    private Transform _phoneItem, _cableItem;
     private readonly List<Component> _pulsing = new();
 
     public static bool IsDone => PlayerPrefs.GetInt(DoneKey, 0) == 1;
@@ -49,6 +55,19 @@ public class Onboarding : MonoBehaviour
         _player = PlayerInteract.Instance.transform;
         _lastPos = _player.position;
         _kidnapper = FindObjectOfType<KidnapperBrain>();
+
+        // Remember the phone and the charger lying in the house (their spots are random).
+        foreach (var item in FindObjectsOfType<InteractItem>())
+        {
+            if (item.Item == null || !item.Item.IsEssential) continue;
+            if (item.name.Contains("Phone")) _phoneItem = item.transform;
+            else if (item.name.Contains("Cable") || item.name.Contains("Charg"))
+            {
+                _cableItem = item.transform;
+                _cable = item.Item;
+            }
+        }
+
         PlayerInventory.Instance.OnItemAdded += OnItemAdded;
         if (_kidnapper != null)
         {
@@ -57,6 +76,11 @@ public class Onboarding : MonoBehaviour
         }
         Enter(Step.Move);
     }
+
+    private bool HasPhone => PhonePresence.Instance != null && PhonePresence.Instance.HasPhone;
+    private bool HasCable => _cable != null && PlayerInventory.Instance.HasItem(_cable);
+    private bool CallStarted => PoliceArrival.Instance != null && PoliceArrival.Instance.CallStarted;
+    private bool IsCharging => PhoneCharging.Instance != null && PhoneCharging.Instance.IsCharging;
 
     private void Update()
     {
@@ -87,17 +111,46 @@ public class Onboarding : MonoBehaviour
                 break;
 
             case Step.Unhide:
-                if (!PlayerHide.Instance.IsHidden) Enter(Step.Throw);
+                if (!PlayerHide.Instance.IsHidden) Enter(HasPhone ? Step.Call : Step.Phone);
+                break;
+
+            case Step.Phone:
+                if (HasPhone) Enter(Step.Call);
+                break;
+
+            case Step.Call:
+                if (CallStarted) Enter(HasCable ? Step.Plug : Step.Charger);
+                else if (PhoneCall.Instance != null && !PhoneCall.Instance.CanCall)
+                {
+                    // Dead phone: charge it first, then come back to the call.
+                    _callAfterCharge = true;
+                    Enter(HasCable ? Step.Plug : Step.Charger);
+                }
+                break;
+
+            case Step.Charger:
+                if (HasCable) Enter(Step.Plug);
+                break;
+
+            case Step.Plug:
+                if (IsCharging) Enter(Step.Charging);
+                break;
+
+            case Step.Charging:
+                // The charging screen explains itself; continue once the player closes it.
+                if (!IsCharging)
+                {
+                    if (_callAfterCharge && !CallStarted) { _callAfterCharge = false; Enter(Step.Call); }
+                    else Enter(Step.Throw);
+                }
                 break;
 
             case Step.Throw:
                 bool hasItem = PlayerInventory.Instance.OtherItems.Any(i => i != null && i.IsThrowable);
-                ObjectiveHUD.SetTutorial("Tutorial 4/4 · Fight back",
-                    _spotted ? "He's seen you! Throw something at him!" : "Someone is coming... and he is faster than you.",
-                    hasItem
-                        ? "Drag an item from your hotbar onto him to slow him down, then run."
-                        : "Grab something to throw first: walk up to a rock, ball or pot and press [E].");
-                if (_hit) Finish("Nice hit! He's slowed down. Now find your phone and call 911.");
+                Show(7, "Fight back",
+                    _spotted ? "He's seen you! Throw something at him!" : "Footsteps... He's awake, and faster than you.",
+                    hasItem ? "Drag an item from the hotbar onto him" : "Grab a rock, ball or pot first [E]");
+                if (_hit) Finish("Got him! Now survive until help arrives.");
                 break;
         }
     }
@@ -109,41 +162,66 @@ public class Onboarding : MonoBehaviour
         switch (step)
         {
             case Step.Move:
-                ObjectiveHUD.SetTutorial("Tutorial 1/4 · Move", "Walk around with [W][A][S][D].",
-                    "Hold [Shift] to sprint (uses stamina).   ·   [Enter] skip tutorial");
+                Show(1, "Move", "Walk around with [W][A][S][D].", "[Shift] sprint  ·  [Enter] skip tutorial");
                 break;
 
             case Step.Pickup:
-                ObjectiveHUD.SetTutorial("Tutorial 2/4 · Find items", "Find something you can pick up.",
-                    "Walk up to a pulsing item and press [E]. Rocks, balls and pots go in your hotbar.");
+                Show(2, "Items", "Pick up something you can throw.", "Walk to a glowing item, press [E]");
                 foreach (var item in NearestItems(3)) Pulse(item);
                 break;
 
             case Step.Hide:
-                ObjectiveHUD.Toast("Got it!");
-                ObjectiveHUD.SetTutorial("Tutorial 3/4 · Hide", "Hide behind a purple curtain.",
-                    "Stand next to a curtain and press [E]. He can't see you there... unless he watched you go in.");
+                Show(3, "Hide", "Hide behind a purple curtain.", "Stand next to it, press [E]");
                 var spot = HideArea.All.Where(h => h != null && !h.IsBroken)
                     .OrderBy(h => Vector2.Distance(h.transform.position, _player.position)).FirstOrDefault();
                 if (spot != null) Pulse(spot);
                 break;
 
             case Step.Unhide:
-                ObjectiveHUD.SetTutorial("Tutorial 3/4 · Hide", "You're hidden. Nobody can see you in here.",
-                    "Press [E] again to come out.");
+                Show(3, "Hide", "Hidden. Unless he saw you go in, you're safe.", "[E] come out");
+                break;
+
+            case Step.Phone:
+                Show(4, "Phone", "Find the old phone. It's your only way home.", "It's somewhere in this house, press [E] on it");
+                if (_phoneItem != null && _phoneItem.gameObject.activeInHierarchy) Pulse(_phoneItem);
+                break;
+
+            case Step.Call:
+                Show(5, "Call 911", "Open the phone with [Tab] and press Call.", "Once you call, the police start coming");
+                break;
+
+            case Step.Charger:
+                Show(6, "Battery", "Your battery drains. Find the charging cable.", "A dead phone makes the police slower");
+                if (_cableItem != null && _cableItem.gameObject.activeInHierarchy) Pulse(_cableItem);
+                break;
+
+            case Step.Plug:
+                Show(6, "Battery", "Plug the cable in at a wall outlet.", "Walk to a glowing outlet, press [E]");
+                foreach (var o in ChargingOutlet.All.Where(o => o != null && !o.IsBroken)
+                             .OrderBy(o => Vector2.Distance(o.transform.position, _player.position)).Take(2))
+                    Pulse(o);
+                break;
+
+            case Step.Charging:
+                ObjectiveHUD.ClearTutorial(); // the charging screen has its own hints
                 break;
 
             case Step.Throw:
                 KidnapperBrain.HoldAsleep = false;
                 if (_kidnapper != null) _kidnapper.WakeUp();
-                ObjectiveHUD.Toast("Did you hear that?");
                 var slot = GameObject.Find("=== Item Hotbar ===");
                 if (slot != null) Pulse(slot.transform);
                 break;
         }
     }
 
-    private void OnItemAdded(ItemData item) => _itemPicked = true;
+    private static void Show(int page, string title, string text, string hint) =>
+        ObjectiveHUD.SetTutorial($"Tutorial {page}/{Pages} · {title}", text, hint);
+
+    private void OnItemAdded(ItemData item)
+    {
+        if (item != null && item.IsThrowable) _itemPicked = true;
+    }
 
     private void OnKidnapperHit(Vector2 at) => _hit = true;
 

@@ -55,6 +55,9 @@ namespace Slafurry.UI.HUD
             "They're outside!",
         };
 
+        /// <summary>True while the gameplay HUD is up (its toast slot can be used).</summary>
+        public static bool Available => _instance != null && _instance._toast != null;
+
         /// <summary>Show a short message under the objective.</summary>
         public static void Toast(string message) { if (_instance != null) _instance.ShowToast(message); }
 
@@ -90,8 +93,10 @@ namespace Slafurry.UI.HUD
                 }
                 else if (_controls.text != _controlsDefault)
                 {
-                    _controls.text = _controlsDefault; // tutorial over: show the full controls once more
-                    _hideControls = StartCoroutine(HideControlsLater());
+                    // Tutorial over (or paused for the charging screen): the controls were just taught
+                    // one by one, so don't pile the full list on top of the next message.
+                    _controls.text = _controlsDefault;
+                    _controls.gameObject.SetActive(false);
                 }
             }
             _lastObjective = null; // force refresh
@@ -121,6 +126,12 @@ namespace Slafurry.UI.HUD
 
         private void Update()
         {
+            // Charging screen opened while a toast was showing: clear it, the screen has its own hints.
+            if (_toast != null && _toast.alpha > 0f && PhoneCharging.Instance != null && PhoneCharging.Instance.IsCharging)
+            {
+                if (_toastRoutine != null) { StopCoroutine(_toastRoutine); _toastRoutine = null; }
+                _toast.alpha = 0f;
+            }
             string text = TutorialActive
                 ? $"<size=75%><color=#E3B341>{_tutorialTitle}</color></size>\n{_tutorialText}"
                 : CurrentObjective();
@@ -154,6 +165,8 @@ namespace Slafurry.UI.HUD
         private void ShowToast(string message)
         {
             if (_toast == null) return;
+            // The charging screen shows its own hints in that spot; don't stack a toast on them.
+            if (PhoneCharging.Instance != null && PhoneCharging.Instance.IsCharging) return;
             if (_toastRoutine != null) StopCoroutine(_toastRoutine);
             _toastRoutine = StartCoroutine(ToastRoutine(message));
         }

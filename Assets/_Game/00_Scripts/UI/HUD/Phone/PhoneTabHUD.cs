@@ -138,7 +138,9 @@ namespace Slafurry.UI.HUD.Phone
 
         private void Slide()
         {
-            Vector2 target = _isOpen
+            // Tuck the phone away while the charging screen is up (it has its own phone view).
+            bool show = _isOpen && !(PhoneCharging.Instance != null && PhoneCharging.Instance.IsCharging);
+            Vector2 target = show
                 ? _shownPos
                 : _shownPos + Vector2.up * _hiddenOffsetY;
 
