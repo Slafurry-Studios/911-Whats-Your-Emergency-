@@ -89,6 +89,15 @@ public class PlayerInteract : BaseTrigger
         if (mouse != null && mouse.leftButton.wasPressedThisFrame &&
             UnityEngine.EventSystems.EventSystem.current != null &&
             UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
+        // While hidden, E always means "come out" — never grab an item that happens to be closer.
+        var hide = PlayerHide.Instance;
+        if (hide != null && hide.IsHidden)
+        {
+            if (hide.CurrentArea != null) hide.CurrentArea.Interact();
+            else hide.SetHidden(false);
+            AddTriggerCount();
+            return;
+        }
         if (CurrentTarget == null || !CurrentTarget.CanInteract) return;
 
         CurrentTarget.Interact();
