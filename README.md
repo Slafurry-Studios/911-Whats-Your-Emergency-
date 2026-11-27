@@ -21,7 +21,7 @@ You play as a young girl kidnapped and trapped inside a dangerous man's house in
 
 ## PLAY IT ON
 <p align="left">
-  <a href="https://lordzaini.itch.io/"><img src="https://img.shields.io/badge/ITCH.IO-ffffff?style=for-the-badge&logo=itch.io&logoColor=000000" /></a>
+  <a href="https://slafurrystudios.itch.io/911-whats-your-emergency"><img src="https://img.shields.io/badge/ITCH.IO-ffffff?style=for-the-badge&logo=itch.io&logoColor=000000" /></a>
 </p>
 
 ---
